@@ -1,0 +1,37 @@
+{
+  // 💡 最佳实践：TypeScript 配置说明
+  // TypeScript 能在编译时发现类型错误，比运行时报错更早发现问题
+  "compilerOptions": {
+    "target": "ES2020",           // 编译目标，现代浏览器都支持 ES2020
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",           // 使用 ES 模块系统
+    "skipLibCheck": true,         // 跳过 node_modules 类型检查，加快编译
+
+    /* 模块解析 */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",           // React 17+ 的新 JSX 转换
+
+    /* 严格模式 - 强烈推荐开启！ */
+    "strict": true,               // 开启所有严格检查
+    "noUnusedLocals": true,       // 不允许未使用的局部变量
+    "noUnusedParameters": true,   // 不允许未使用的参数
+    "noFallthroughCasesInSwitch": true,
+
+    /* 路径别名 - 让 import 更清晰 */
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],           // @/components 等于 src/components
+      "@components/*": ["src/components/*"],
+      "@pages/*": ["src/pages/*"],
+      "@hooks/*": ["src/hooks/*"],
+      "@services/*": ["src/services/*"]
+    }
+  },
+  "include": ["src"],
+  "references": [{ "path": "./tsconfig.node.json" }]
+}
