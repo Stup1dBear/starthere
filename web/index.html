@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- 让移动端正确缩放 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- 浏览器标签页显示的图标 -->
+    <link rel="icon" type="image/svg+xml" href="/star.svg" />
+    <title>StartHere - 星辰目标管理</title>
+  </head>
+  <body>
+    <!-- 
+      这是 React 应用的挂载点
+      React 会把整个应用渲染到这个 div 里面
+      为什么叫 root？约定俗成，表示"根节点"
+    -->
+    <div id="root"></div>
+
+    <!-- 
+      引入 JavaScript 入口文件
+      type="module" 表示使用 ES Module（现代 JS 模块系统）
+      Vite 会自动处理这个文件，编译 TypeScript，打包依赖
+    -->
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

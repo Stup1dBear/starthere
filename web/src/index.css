@@ -1,0 +1,69 @@
+/**
+ * index.css - 全局样式
+ * 
+ * 这里放所有页面通用的样式：
+ * - CSS Reset（重置浏览器默认样式）
+ * - CSS 变量（颜色、字体等）
+ * - 全局基础样式
+ */
+
+/* ========== CSS 变量 ========== */
+/* 
+ * :root 是文档根元素（html）
+ * 这里定义的变量可以在任何地方使用：var(--变量名)
+ * 好处：集中管理颜色，方便主题切换
+ */
+:root {
+  /* 宇宙主题配色 */
+  --color-bg: #0a0a1a; /* 深空背景 */
+  --color-surface: #1a1a2e; /* 卡片背景 */
+  --color-primary: #ffd700; /* 星星金色 */
+  --color-text: #e0e0e0; /* 主文字 */
+  --color-text-dim: #888; /* 次要文字 */
+
+  /* 字体 */
+  --font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
+}
+
+/* ========== CSS Reset ========== */
+/* 
+ * 不同浏览器有不同的默认样式，这会导致样式不一致
+ * Reset 把它们统一成一个基准
+ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box; /* 让 width/height 包含 padding 和 border */
+  margin: 0;
+  padding: 0;
+}
+
+/* ========== 全局样式 ========== */
+html {
+  font-size: 16px; /* 基准字号，rem 单位基于此 */
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.6; /* 行高，1.6 是比较舒适的阅读间距 */
+  min-height: 100vh; /* 至少占满视口高度 */
+}
+
+/* 让链接继承颜色，去掉默认下划线 */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* 代码块样式 */
+code {
+  font-family: "Fira Code", "SF Mono", Monaco, monospace;
+  background-color: var(--color-surface);
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+  font-size: 0.9em;
+}

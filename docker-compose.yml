@@ -1,0 +1,63 @@
+# ===============================================
+# Docker Compose 编排配置
+# ===============================================
+#
+# Docker Compose 是什么？
+# - 用于定义和运行多容器应用的工具
+# - 用 YAML 文件描述服务、网络、卷等
+# - 一条命令启动所有服务：docker-compose up
+#
+# 类比理解（你熟悉的领域）：
+# - 就像 K8s 的 Deployment + Service，但更简单
+# - 适合单机部署，K8s 适合集群
+# ===============================================
+
+version: "3.8"
+
+services:
+  # ========== 前端服务 ==========
+  web:
+    build:
+      context: ./web # 构建上下文（Dockerfile 所在目录）
+      dockerfile: Dockerfile
+    container_name: starthere-web
+    ports:
+      - "80:80" # 主机端口:容器端口
+    restart: unless-stopped # 自动重启策略
+    # 健康检查
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ========== 后端服务（暂时注释，后续添加）==========
+  # server:
+  #   build:
+  #     context: ./server
+  #     dockerfile: Dockerfile
+  #   container_name: starthere-server
+  #   ports:
+  #     - "8080:8080"
+  #   environment:
+  #     - DB_HOST=mysql
+  #     - DB_PORT=3306
+  #   depends_on:
+  #     - mysql
+  #   restart: unless-stopped
+
+  # ========== 数据库（使用火山引擎云数据库，不需要本地部署）==========
+  # 如果需要本地开发环境的数据库，可以取消注释
+  # mysql:
+  #   image: mysql:8.0
+  #   container_name: starthere-mysql
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: your_password
+  #     MYSQL_DATABASE: starthere
+  #   volumes:
+  #     - mysql_data:/var/lib/mysql
+  #   ports:
+  #     - "3306:3306"
+
+# volumes:
+#   mysql_data:

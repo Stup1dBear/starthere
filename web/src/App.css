@@ -1,0 +1,84 @@
+/**
+ * App.css - App 组件的样式
+ * 
+ * 组织方式：每个组件可以有自己的 CSS 文件
+ * 命名约定：组件名.css
+ */
+
+.app {
+  /* Flexbox 布局，让内容垂直居中 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 100vh; /* 占满视口高度 */
+  padding: 2rem;
+  text-align: center;
+}
+
+.app h1 {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+
+  /* 渐变文字效果 */
+  background: linear-gradient(135deg, var(--color-primary), #ff8c00);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.app > p {
+  font-size: 1.25rem;
+  color: var(--color-text-dim);
+  margin-bottom: 2rem;
+}
+
+.card {
+  background-color: var(--color-surface);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+
+  /* 微妙的边框 */
+  border: 1px solid rgba(255, 215, 0, 0.1);
+
+  /* 最大宽度，避免在大屏幕上太宽 */
+  max-width: 500px;
+}
+
+.card p {
+  margin-bottom: 1rem;
+}
+
+.card p:last-child {
+  margin-bottom: 0;
+}
+
+.hint {
+  font-size: 0.9rem;
+  color: var(--color-text-dim);
+}
+
+footer {
+  margin-top: auto; /* 推到底部 */
+  padding: 1rem;
+  color: var(--color-text-dim);
+  font-size: 0.9rem;
+}
+
+/* ========== 动画（可选） ========== */
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* 星星闪烁效果，后续可以用 */
+.star {
+  animation: twinkle 2s ease-in-out infinite;
+}
