@@ -152,11 +152,11 @@ starthere/
 - [x] 域名备案完成后配置 DNS 解析 ✅ 2026-01-27
 - [x] 申请并配置 SSL 证书（HTTPS）✅ 2026-01-28
 - [x] 配置 ALB + HTTPS（SNI 多证书，HTTP→HTTPS 跳转）✅ 2026-01-28
-- [ ] 配置 GitHub Actions CI/CD 自动部署
+- [x] 配置 GitHub Actions CI/CD 自动部署 ✅ 2026-01-29
   - [x] 创建工作流文件
   - [x] 编写配置指南（docs/CICD_SETUP.md）
-  - [ ] 配置 GitHub Secrets
-  - [ ] 首次部署验证
+  - [x] 配置 GitHub Secrets（ed25519 密钥）
+  - [x] 首次自动部署成功
 - [ ] 配置 Docker 镜像加速器（国内拉取更快）
 - [ ] 可选：启用 HSTS 响应头
 
@@ -164,4 +164,4 @@ starthere/
 
 ---
 
-_最后更新：2026-01-28_
+_最后更新：2026-01-29_
