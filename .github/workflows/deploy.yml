@@ -112,7 +112,7 @@ jobs:
 
             # 验证容器运行状态
             docker ps | grep starthere-web
-            
+
             # 清理登录凭据（最佳实践）
             docker logout ghcr.io
 
