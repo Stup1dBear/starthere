@@ -147,6 +147,7 @@ starthere/
 | --------------------------- | -------------------- | --------- |
 | `PROJECT_CONTEXT.md`        | 项目上下文（本文件） | ✅        |
 | `INFRASTRUCTURE.md`         | 基础设施管理         | ✅        |
+| `CICD_SETUP.md`             | CI/CD 配置指南       | ✅        |
 | `LEARNING_REACT.md`         | React 学习笔记       | 📝 待创建 |
 | `LEARNING_TYPESCRIPT.md`    | TypeScript 学习笔记  | 📝 待创建 |
 | `BACKEND_BEST_PRACTICES.md` | 后端最佳实践         | 📝 待创建 |
@@ -165,8 +166,9 @@ starthere/
 - [x] 配置 Docker 容器化部署 ✅ 2026-01-25
 - [x] 部署到火山引擎服务器 ✅ 2026-01-25
 - [x] 通过服务器 IP 访问成功 ✅ 2026-01-25
-- [ ] 配置域名访问（等待备案完成）
-- [ ] 配置 HTTPS
+- [x] 配置域名访问（域名备案完成 + DNS 已指向 ALB）✅ 2026-01-27
+- [x] 配置 HTTPS（ALB + SNI 多证书，star-there.com/cn 均可访问）✅ 2026-01-28
+- [x] 选择负载均衡方案：改用 ALB ✅ 2026-01-27
 - [ ] 初始化后端项目（Go + Gin）
 - [ ] 搭建基础页面框架
 
