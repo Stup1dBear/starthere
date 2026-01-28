@@ -13,31 +13,94 @@
  */
 
 import "./App.css";
+import { useState } from "react";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import Box from "@mui/material/Box";
 
 // 这是一个函数组件（Function Component）
 // 函数名就是组件名，必须大写开头
+
 function App() {
-  // 函数体可以写任何 JS/TS 逻辑
-  const appName = "StartHere";
-  const greeting = "欢迎来到星辰目标管理";
+  // 目标列表和输入框状态
+  const [goals, setGoals] = useState<string[]>([]);
+  const [input, setInput] = useState("");
 
-  // return 的内容是 JSX，描述这个组件要渲染什么
+  // 添加目标
+  const handleAddGoal = () => {
+    if (input.trim()) {
+      setGoals([input.trim(), ...goals]);
+      setInput("");
+    }
+  };
+
   return (
-    // className 而不是 class（因为 class 是 JS 保留字）
-    <div className="app">
-      {/* 在 JSX 中用花括号 {} 插入 JS 表达式 */}
-      <h1>🌟 {appName}</h1>
-      <p>{greeting}</p>
+    <Container maxWidth="sm" sx={{ py: 4 }}>
+      <Typography variant="h4" component="h1" gutterBottom align="center">
+        🌟 StartHere 目标管理
+      </Typography>
+      <Typography variant="subtitle1" align="center" gutterBottom>
+        记录你的目标，迈出第一步！
+      </Typography>
 
-      <div className="card">
-        <p>你的第一个 React 应用已经运行起来了！</p>
-        <p className="hint">
-          编辑 <code>src/App.tsx</code> 并保存，页面会自动更新
-        </p>
-      </div>
+      <Card sx={{ mb: 3 }}>
+        <CardContent>
+          <Box display="flex" gap={2}>
+            <TextField
+              label="新目标"
+              variant="outlined"
+              fullWidth
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handleAddGoal();
+              }}
+            />
+            <Button
+              variant="contained"
+              onClick={handleAddGoal}
+              sx={{ minWidth: 100 }}
+            >
+              添加
+            </Button>
+          </Box>
+        </CardContent>
+      </Card>
 
-      <footer>🚀 Let's start here, and reach for the stars!</footer>
-    </div>
+      <Card>
+        <CardContent>
+          <Typography variant="h6" gutterBottom>
+            🎯 我的目标
+          </Typography>
+          {goals.length === 0 ? (
+            <Typography color="text.secondary">
+              暂无目标，快来添加一个吧！
+            </Typography>
+          ) : (
+            <List>
+              {goals.map((goal, idx) => (
+                <ListItem key={idx} divider>
+                  <ListItemText primary={goal} />
+                </ListItem>
+              ))}
+            </List>
+          )}
+        </CardContent>
+      </Card>
+
+      <Box mt={4} textAlign="center">
+        <Typography variant="body2" color="text.secondary">
+          🚀 Let's start here, and reach for the stars!
+        </Typography>
+      </Box>
+    </Container>
   );
 }
 
