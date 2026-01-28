@@ -26,8 +26,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  # Docker 镜像名必须小写
-  IMAGE_NAME: ${{ github.repository_owner }}/starthere/web
+  # IMAGE_NAME 将在运行时由 GITHUB_REPOSITORY 转小写生成
 
 jobs:
   build-and-deploy:
@@ -42,6 +41,11 @@ jobs:
       # ========== 1. 检出代码 ==========
       - name: 检出代码
         uses: actions/checkout@v4
+
+      # ========== 1.1 生成小写镜像名 ==========
+      - name: 生成小写镜像名
+        run: |
+          echo "IMAGE_NAME=${GITHUB_REPOSITORY,,}/web" >> $GITHUB_ENV
 
       # ========== 2. 设置 Docker Buildx（支持跨平台构建）==========
       - name: 设置 Docker Buildx
