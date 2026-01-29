@@ -1,108 +1,133 @@
-/**
- * App.tsx - 根组件
- *
- * React 核心概念：组件 (Component)
- * - 组件是 UI 的独立、可复用的单元
- * - 每个组件是一个函数，返回要显示的内容（JSX）
- * - 组件名必须大写开头（区分 HTML 标签）
- *
- * JSX 是什么？
- * - 一种语法糖，让你在 JS 中写类似 HTML 的代码
- * - <div>Hello</div> 会被编译成 React.createElement('div', null, 'Hello')
- * - 文件扩展名 .tsx = TypeScript + JSX
- */
-
-import "./App.css";
 import { useState } from "react";
-import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
-import Box from "@mui/material/Box";
-
-// 这是一个函数组件（Function Component）
-// 函数名就是组件名，必须大写开头
+import {
+  ThemeProvider,
+  CssBaseline,
+  Container,
+  Typography,
+  Box,
+  Fab,
+  Zoom,
+} from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import theme from "./theme";
+import { useGoalStore } from "./stores/goalStore";
+import StarBackground from "./components/StarBackground";
+import GoalCard from "./components/GoalCard";
+import CreateGoalDialog from "./components/CreateGoalDialog";
+import "./App.css";
 
 function App() {
-  // 目标列表和输入框状态
-  const [goals, setGoals] = useState<string[]>([]);
-  const [input, setInput] = useState("");
+  const { goals } = useGoalStore();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  // 添加目标
-  const handleAddGoal = () => {
-    if (input.trim()) {
-      setGoals([input.trim(), ...goals]);
-      setInput("");
-    }
-  };
+  const activeGoals = goals.filter((g) => g.status === "active");
+  const completedGoals = goals.filter((g) => g.status === "completed");
 
   return (
-    <Container maxWidth="sm" sx={{ py: 4 }}>
-      <Typography variant="h4" component="h1" gutterBottom align="center">
-        🌟 StartHere 目标管理
-      </Typography>
-      <Typography variant="subtitle1" align="center" gutterBottom>
-        记录你的目标，迈出第一步！
-      </Typography>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <StarBackground />
 
-      <Card sx={{ mb: 3 }}>
-        <CardContent>
-          <Box display="flex" gap={2}>
-            <TextField
-              label="新目标"
-              variant="outlined"
-              fullWidth
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") handleAddGoal();
-              }}
-            />
-            <Button
-              variant="contained"
-              onClick={handleAddGoal}
-              sx={{ minWidth: 100 }}
-            >
-              添加
-            </Button>
-          </Box>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardContent>
-          <Typography variant="h6" gutterBottom>
-            🎯 我的目标
+      <Container
+        maxWidth="md"
+        sx={{ py: 4, position: "relative", zIndex: 1, minHeight: "100vh" }}
+      >
+        <Box textAlign="center" mb={6}>
+          <Typography
+            variant="h3"
+            component="h1"
+            gutterBottom
+            sx={{
+              fontWeight: "bold",
+              textShadow: "0 0 20px rgba(144, 202, 249, 0.5)",
+            }}
+          >
+            🌟 星辰目标
           </Typography>
-          {goals.length === 0 ? (
-            <Typography color="text.secondary">
-              暂无目标，快来添加一个吧！
-            </Typography>
-          ) : (
-            <List>
-              {goals.map((goal, idx) => (
-                <ListItem key={idx} divider>
-                  <ListItemText primary={goal} />
-                </ListItem>
-              ))}
-            </List>
-          )}
-        </CardContent>
-      </Card>
+          <Typography
+            variant="subtitle1"
+            sx={{ color: "text.secondary", letterSpacing: 1 }}
+          >
+            每一个目标都是宇宙中的一颗星星，点亮它。
+          </Typography>
+        </Box>
 
-      <Box mt={4} textAlign="center">
-        <Typography variant="body2" color="text.secondary">
-          🚀 Let's start here, and reach for the stars!
-        </Typography>
-      </Box>
-    </Container>
+        <Box mb={6}>
+          {activeGoals.length > 0 ? (
+            activeGoals.map((goal) => <GoalCard key={goal.id} goal={goal} />)
+          ) : (
+            <Box
+              textAlign="center"
+              py={8}
+              sx={{
+                border: "2px dashed rgba(255,255,255,0.1)",
+                borderRadius: 4,
+                bgcolor: "rgba(0,0,0,0.2)",
+              }}
+            >
+              <Typography variant="h6" color="text.secondary" gutterBottom>
+                这片星域还很空旷...
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                点击右下角的按钮，升起你的第一颗星星
+              </Typography>
+            </Box>
+          )}
+        </Box>
+
+        {completedGoals.length > 0 && (
+          <Box>
+            <Typography
+              variant="h5"
+              gutterBottom
+              sx={{
+                color: "#FFD700",
+                textShadow: "0 0 10px rgba(255, 215, 0, 0.3)",
+              }}
+            >
+              � 星系传说 (已完成)
+            </Typography>
+            {completedGoals.map((goal) => (
+              <GoalCard key={goal.id} goal={goal} />
+            ))}
+          </Box>
+        )}
+
+        <Zoom in={true} style={{ transitionDelay: "500ms" }}>
+          <Fab
+            color="primary"
+            aria-label="add"
+            sx={{
+              position: "fixed",
+              bottom: 32,
+              right: 32,
+              width: 72,
+              height: 72,
+              boxShadow: "0 0 20px rgba(144, 202, 249, 0.6)",
+              "&:hover": {
+                transform: "scale(1.1)",
+                boxShadow: "0 0 30px rgba(144, 202, 249, 0.8)",
+              },
+            }}
+            onClick={() => setIsDialogOpen(true)}
+          >
+            <AddIcon sx={{ fontSize: 32 }} />
+          </Fab>
+        </Zoom>
+
+        <CreateGoalDialog
+          open={isDialogOpen}
+          onClose={() => setIsDialogOpen(false)}
+        />
+
+        <Box mt={8} textAlign="center">
+          <Typography variant="caption" color="text.secondary">
+            🚀 StartHere - To the Stars
+          </Typography>
+        </Box>
+      </Container>
+    </ThemeProvider>
   );
 }
 
-// 导出组件，让其他文件可以 import
 export default App;
