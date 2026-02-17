@@ -1,8 +1,6 @@
 package handler
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
 	"github.com/stup1dbear/starthere/server/internal/middleware"
 	"github.com/stup1dbear/starthere/server/internal/service"
