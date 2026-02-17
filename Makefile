@@ -31,6 +31,13 @@ IMAGE_SERVER := $(REGISTRY)/$(shell echo $(GITHUB_REPO) | tr '[:upper:]' '[:lowe
 help:
 	@echo "StartHere Makefile - 可用命令："
 	@echo ""
+	@echo "  测试命令："
+	@echo "    make test-web           - 运行前端测试"
+	@echo "    make test-server        - 运行后端测试"
+	@echo "    make test-all           - 运行所有测试"
+	@echo "    make test-web-ui        - 运行前端测试 UI"
+	@echo "    make test-web-coverage  - 生成前端测试覆盖率"
+	@echo ""
 	@echo "  构建命令："
 	@echo "    make build-web          - 构建前端 Docker 镜像"
 	@echo "    make build-server       - 构建后端 Docker 镜像"
@@ -227,3 +234,32 @@ ssh:
 .PHONY: server-logs
 server-logs:
 	ssh $(SERVER_USER)@$(SERVER_HOST) 'docker logs -f starthere-web || true; docker logs -f starthere-server || true'
+
+# ===============================================
+# 测试命令
+# ===============================================
+
+.PHONY: test-web
+test-web:
+	@echo "运行前端测试..."
+	cd web && npm test
+
+.PHONY: test-web-ui
+test-web-ui:
+	@echo "运行前端测试 UI..."
+	cd web && npm run test:ui
+
+.PHONY: test-web-coverage
+test-web-coverage:
+	@echo "生成前端测试覆盖率..."
+	cd web && npm run test:coverage
+
+.PHONY: test-server
+test-server:
+	@echo "运行后端测试..."
+	cd server && make test
+
+.PHONY: test-all
+test-all: test-web test-server
+	@echo "所有测试运行完成！"
+

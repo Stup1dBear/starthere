@@ -30,4 +30,19 @@ export default defineConfig({
       "@": "/src",
     },
   },
+
+  // Vitest 测试配置
+  test: {
+    // 启用类似 Jest 的全局 API（describe, it, expect 等）
+    globals: true,
+    // 使用 jsdom 模拟浏览器环境
+    environment: "jsdom",
+    // 测试文件的设置
+    setupFiles: "./src/test/setup.ts",
+    // 测试覆盖率配置
+    coverage: {
+      provider: "v8",
+      reporter: ["text", "json", "html"],
+    },
+  },
 });
