@@ -4,14 +4,17 @@
 #
 # 工作流程：
 # 1. 代码推送到 main 分支触发
-# 2. 构建 Docker 镜像（跨平台 linux/amd64）
-# 3. 推送镜像到 GitHub Container Registry (ghcr.io)
-# 4. SSH 到服务器，拉取新镜像并重启容器
+# 2. 运行 Go 测试和 vet
+# 3. 构建 Docker 镜像（跨平台 linux/amd64）
+# 4. 推送镜像到 GitHub Container Registry (ghcr.io)
+# 5. SSH 到服务器，拉取新镜像并重启容器
 #
 # 需要配置的 GitHub Secrets：
 # - DEPLOY_HOST: 服务器 IP (115.191.33.64)
 # - DEPLOY_USER: SSH 用户名 (root)
 # - DEPLOY_KEY: SSH 私钥（用于免密登录）
+# - DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME
+# - JWT_SECRET
 # ===============================================
 
 name: Deploy to Production
@@ -29,7 +32,30 @@ env:
   # IMAGE_NAME 将在运行时由 GITHUB_REPOSITORY 转小写生成
 
 jobs:
+  # ========== 测试 Job：先运行测试 ==========
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 设置 Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+
+      - name: 下载后端依赖
+        run: cd server && go mod tidy
+
+      - name: 运行 go vet
+        run: cd server && go vet ./...
+
+      - name: 运行后端测试
+        run: cd server && go test -v ./...
+
+  # ========== 构建和部署 Job：仅在 test 通过后运行 ==========
   build-and-deploy:
+    needs: test
     runs-on: ubuntu-latest
 
     # 需要写权限以推送镜像到 ghcr.io
