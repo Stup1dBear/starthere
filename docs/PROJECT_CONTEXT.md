@@ -116,11 +116,14 @@
 starthere/
 ├── web/                 # React 前端项目
 │   ├── src/
-│   │   ├── components/  # 可复用组件
+│   │   ├── components/  # 可复用组件 (GoalCard, CreateGoalDialog)
 │   │   ├── pages/       # 页面组件
 │   │   ├── hooks/       # 自定义 Hooks
 │   │   ├── services/    # API 调用
-│   │   ├── stores/      # 状态管理
+│   │   ├── stores/      # 状态管理 (Zustand)
+│   │   ├── types/       # 类型定义 (Goal, Milestone)
+│   │   ├── theme/       # 主题配置 (MUI)
+│   │   ├── utils/       # 工具函数
 │   │   └── styles/      # 样式文件
 │   └── package.json
 ├── server/              # Go 后端项目
@@ -148,6 +151,7 @@ starthere/
 | `PROJECT_CONTEXT.md`        | 项目上下文（本文件） | ✅        |
 | `INFRASTRUCTURE.md`         | 基础设施管理         | ✅        |
 | `CICD_SETUP.md`             | CI/CD 配置指南       | ✅        |
+| `FRONTEND_DESIGN.md`        | 前端设计文档         | ✅        |
 | `LEARNING_REACT.md`         | React 学习笔记       | 📝 待创建 |
 | `LEARNING_TYPESCRIPT.md`    | TypeScript 学习笔记  | 📝 待创建 |
 | `BACKEND_BEST_PRACTICES.md` | 后端最佳实践         | 📝 待创建 |
@@ -157,7 +161,7 @@ starthere/
 
 ## 🚀 开发进度
 
-### 当前阶段：前端部署完成 ✅
+### 当前阶段：前端功能开发 ✅
 
 - [x] 确定项目定位和技术栈
 - [x] 创建项目基础结构
@@ -168,7 +172,14 @@ starthere/
 - [x] 通过服务器 IP 访问成功 ✅ 2026-01-25
 - [x] 配置域名访问（域名备案完成 + DNS 已指向 ALB）✅ 2026-01-27
 - [x] 配置 HTTPS（ALB + SNI 多证书，star-there.com/cn 均可访问）✅ 2026-01-28
-- [x] 选择负载均衡方案：改用 ALB ✅ 2026-01-27- [x] 配置 CI/CD 自动部署（GitHub Actions → ghcr.io → 服务器）✅ 2026-01-29- [ ] 初始化后端项目（Go + Gin）
+- [x] 选择负载均衡方案：改用 ALB ✅ 2026-01-27
+- [x] 配置 CI/CD 自动部署（GitHub Actions → ghcr.io → 服务器）✅ 2026-01-29
+- [x] **前端核心功能实现** (MUI + Zustand) ✅ 2026-01-30
+  - [x] 目标创建/编辑/删除
+  - [x] 里程碑管理
+  - [x] 星空主题 UI
+  - [x] 本地持久化存储
+- [ ] 初始化后端项目（Go + Gin）
 - [ ] 搭建基础页面框架
 
 ---
@@ -229,4 +240,4 @@ starthere/
 
 ---
 
-_最后更新：2026-01-25_
+_最后更新：2026-01-30_

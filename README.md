@@ -8,13 +8,13 @@ StartHere 是一个跨端（Web、iOS、Android）的目标管理应用，以宇
 
 ## 技术栈
 
-| 模块 | 技术 | 说明 |
-|------|------|------|
-| 前端 Web | React + TypeScript + Vite | 现代前端工具链 |
-| 移动端 | React Native (后续) | 跨 iOS/Android |
-| 后端 | Go + Gin | 高性能 API 服务 |
-| 数据库 | MySQL/PostgreSQL | 火山引擎云数据库 |
-| 部署 | Docker + Nginx | 容器化部署 |
+| 模块     | 技术                      | 说明             |
+| -------- | ------------------------- | ---------------- |
+| 前端 Web | React + TypeScript + Vite | 现代前端工具链   |
+| 移动端   | React Native (后续)       | 跨 iOS/Android   |
+| 后端     | Go + Gin                  | 高性能 API 服务  |
+| 数据库   | MySQL/PostgreSQL          | 火山引擎云数据库 |
+| 部署     | Docker + Nginx            | 容器化部署       |
 
 ## 项目结构
 
