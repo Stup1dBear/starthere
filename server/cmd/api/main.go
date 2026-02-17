@@ -87,10 +87,10 @@ func main() {
 			{
 				goals.GET("", goalHandler.GetGoals)
 				goals.POST("", goalHandler.CreateGoal)
-				goals.GET("/:id", goalHandler.GetGoal)
-				goals.PUT("/:id", goalHandler.UpdateGoal)
-				goals.DELETE("/:id", goalHandler.DeleteGoal)
-				goals.PATCH("/:id/toggle", goalHandler.ToggleGoalStatus)
+				goals.GET("/:goalId", goalHandler.GetGoal)
+				goals.PUT("/:goalId", goalHandler.UpdateGoal)
+				goals.DELETE("/:goalId", goalHandler.DeleteGoal)
+				goals.PATCH("/:goalId/toggle", goalHandler.ToggleGoalStatus)
 
 				// Milestones
 				milestones := goals.Group("/:goalId/milestones")

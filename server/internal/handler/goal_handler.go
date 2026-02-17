@@ -33,7 +33,7 @@ func (h *GoalHandler) GetGoals(c *gin.Context) {
 // GetGoal gets a single goal by ID
 func (h *GoalHandler) GetGoal(c *gin.Context) {
 	userID := middleware.GetUserID(c)
-	id := c.Param("id")
+	id := c.Param("goalId")
 
 	goal, err := h.goalService.GetGoal(id, userID)
 	if err != nil {
@@ -75,7 +75,7 @@ func (h *GoalHandler) CreateGoal(c *gin.Context) {
 // UpdateGoal updates a goal
 func (h *GoalHandler) UpdateGoal(c *gin.Context) {
 	userID := middleware.GetUserID(c)
-	id := c.Param("id")
+	id := c.Param("goalId")
 
 	var req service.UpdateGoalRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -99,7 +99,7 @@ func (h *GoalHandler) UpdateGoal(c *gin.Context) {
 // ToggleGoalStatus toggles goal completion status
 func (h *GoalHandler) ToggleGoalStatus(c *gin.Context) {
 	userID := middleware.GetUserID(c)
-	id := c.Param("id")
+	id := c.Param("goalId")
 
 	goal, err := h.goalService.ToggleGoalStatus(id, userID)
 	if err != nil {
@@ -117,7 +117,7 @@ func (h *GoalHandler) ToggleGoalStatus(c *gin.Context) {
 // DeleteGoal deletes a goal
 func (h *GoalHandler) DeleteGoal(c *gin.Context) {
 	userID := middleware.GetUserID(c)
-	id := c.Param("id")
+	id := c.Param("goalId")
 
 	err := h.goalService.DeleteGoal(id, userID)
 	if err != nil {
