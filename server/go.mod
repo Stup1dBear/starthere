@@ -1,0 +1,13 @@
+module github.com/stup1dbear/starthere/server
+
+go 1.21
+
+require (
+	github.com/gin-gonic/gin v1.9.1
+	github.com/golang-jwt/jwt/v5 v5.2.0
+	github.com/google/uuid v1.5.0
+	golang.org/x/crypto v0.17.0
+	gopkg.in/validator.v2 v2.0.0-20200605142438-19516c07480f
+	gorm.io/driver/mysql v1.5.2
+	gorm.io/gorm v1.25.5
+)

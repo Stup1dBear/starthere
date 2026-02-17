@@ -31,33 +31,47 @@ services:
       timeout: 10s
       retries: 3
 
-  # ========== 后端服务（暂时注释，后续添加）==========
-  # server:
-  #   build:
-  #     context: ./server
-  #     dockerfile: Dockerfile
-  #   container_name: starthere-server
-  #   ports:
-  #     - "8080:8080"
-  #   environment:
-  #     - DB_HOST=mysql
-  #     - DB_PORT=3306
-  #   depends_on:
-  #     - mysql
-  #   restart: unless-stopped
+  # ========== 后端服务 ==========
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: starthere-server
+    ports:
+      - "8080:8080"
+    environment:
+      - SERVER_PORT=8080
+      - GIN_MODE=debug
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_USER=starthere
+      - DB_PASSWORD=starthere_password
+      - DB_NAME=starthere
+      - JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+      - JWT_EXPIRY_HOURS=24
+    depends_on:
+      - mysql
+    restart: unless-stopped
 
-  # ========== 数据库（使用火山引擎云数据库，不需要本地部署）==========
-  # 如果需要本地开发环境的数据库，可以取消注释
-  # mysql:
-  #   image: mysql:8.0
-  #   container_name: starthere-mysql
-  #   environment:
-  #     MYSQL_ROOT_PASSWORD: your_password
-  #     MYSQL_DATABASE: starthere
-  #   volumes:
-  #     - mysql_data:/var/lib/mysql
-  #   ports:
-  #     - "3306:3306"
+  # ========== MySQL 数据库（本地开发环境）==========
+  mysql:
+    image: mysql:8.0
+    container_name: starthere-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: starthere
+      MYSQL_USER: starthere
+      MYSQL_PASSWORD: starthere_password
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    command: --default-authentication-plugin=mysql_native_password
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot_password"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-# volumes:
-#   mysql_data:
+volumes:
+  mysql_data:
