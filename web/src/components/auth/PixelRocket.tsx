@@ -1,4 +1,5 @@
-import { keyframes, styled } from "@mui/material/styles";
+import { keyframes } from "@mui/material/styles";
+import { Box } from "@mui/material";
 
 const rocketFly = keyframes`
   0% {
@@ -28,46 +29,72 @@ const starTwinkle = keyframes`
   50% { opacity: 1; }
 `;
 
-const RocketContainer = styled("div")({
-  position: "relative",
-  width: "120px",
-  height: "160px",
-  animation: `${rocketFly} 3s ease-in-out infinite`,
-});
-
-const Star = styled("div", {
-  position: "absolute",
-  width: "4px",
-  height: "4px",
-  backgroundColor: "#fff",
-  borderRadius: "50%",
-  animation: `${starTwinkle} 2s ease-in-out infinite`,
-});
-
-const Flame = styled("div")({
-  position: "absolute",
-  bottom: "0",
-  left: "50%",
-  transform: "translateX(-50%)",
-  width: "30px",
-  height: "40px",
-  background: "linear-gradient(to top, #ff6b00, #ffd700, #fff)",
-  clipPath: "polygon(50% 100%, 0% 0%, 100% 0%)",
-  animation: `${flameFlicker} 0.15s ease-in-out infinite`,
-});
-
 export function PixelRocket() {
   return (
-    <RocketContainer>
+    <Box
+      sx={{
+        position: "relative",
+        width: "120px",
+        height: "160px",
+        animation: `${rocketFly} 3s ease-in-out infinite`,
+      }}
+    >
       {/* Stars */}
-      <Star sx={{ top: "10%", left: "10%", animationDelay: "0s" }} />
-      <Star sx={{ top: "20%", right: "15%", animationDelay: "0.5s" }} />
-      <Star sx={{ top: "40%", left: "5%", animationDelay: "1s" }} />
-      <Star sx={{ top: "60%", right: "10%", animationDelay: "1.5s" }} />
+      <Box
+        sx={{
+          position: "absolute",
+          width: "4px",
+          height: "4px",
+          backgroundColor: "#fff",
+          borderRadius: "50%",
+          animation: `${starTwinkle} 2s ease-in-out infinite`,
+          top: "10%",
+          left: "10%",
+        }}
+      />
+      <Box
+        sx={{
+          position: "absolute",
+          width: "4px",
+          height: "4px",
+          backgroundColor: "#fff",
+          borderRadius: "50%",
+          animation: `${starTwinkle} 2s ease-in-out infinite`,
+          animationDelay: "0.5s",
+          top: "20%",
+          right: "15%",
+        }}
+      />
+      <Box
+        sx={{
+          position: "absolute",
+          width: "4px",
+          height: "4px",
+          backgroundColor: "#fff",
+          borderRadius: "50%",
+          animation: `${starTwinkle} 2s ease-in-out infinite`,
+          animationDelay: "1s",
+          top: "40%",
+          left: "5%",
+        }}
+      />
+      <Box
+        sx={{
+          position: "absolute",
+          width: "4px",
+          height: "4px",
+          backgroundColor: "#fff",
+          borderRadius: "50%",
+          animation: `${starTwinkle} 2s ease-in-out infinite`,
+          animationDelay: "1.5s",
+          top: "60%",
+          right: "10%",
+        }}
+      />
 
-      {/* Rocket body - pixel style using divs */}
-      <div
-        style={{
+      {/* Rocket body container */}
+      <Box
+        sx={{
           position: "absolute",
           top: "20px",
           left: "50%",
@@ -77,31 +104,32 @@ export function PixelRocket() {
         }}
       >
         {/* Rocket nose cone */}
-        <div
-          style={{
-            width: "0",
-            height: "0",
+        <Box
+          sx={{
+            width: 0,
+            height: 0,
             borderLeft: "30px solid transparent",
             borderRight: "30px solid transparent",
             borderBottom: "40px solid #90caf9",
-            marginLeft: "0",
+            marginLeft: 0,
           }}
         />
 
         {/* Rocket body */}
-        <div
-          style={{
+        <Box
+          sx={{
             width: "60px",
             height: "60px",
             backgroundColor: "#e0e0e0",
             boxShadow: "4px 0 0 #b0b0b0, -4px 0 0 #ffffff",
+            position: "relative",
           }}
         >
           {/* Window */}
-          <div
-            style={{
+          <Box
+            sx={{
               position: "absolute",
-              top: "50px",
+              top: "10px",
               left: "50%",
               transform: "translateX(-50%)",
               width: "24px",
@@ -112,37 +140,49 @@ export function PixelRocket() {
               boxShadow: "inset 2px 2px 0 #b8dcff",
             }}
           />
-        </div>
+        </Box>
 
         {/* Fins */}
-        <div
-          style={{
+        <Box
+          sx={{
             position: "absolute",
-            bottom: "0",
+            bottom: 0,
             left: "-10px",
-            width: "0",
-            height: "0",
+            width: 0,
+            height: 0,
             borderTop: "20px solid transparent",
             borderBottom: "0 solid transparent",
             borderRight: "20px solid #ff6b00",
           }}
         />
-        <div
-          style={{
+        <Box
+          sx={{
             position: "absolute",
-            bottom: "0",
+            bottom: 0,
             right: "-10px",
-            width: "0",
-            height: "0",
+            width: 0,
+            height: 0,
             borderTop: "20px solid transparent",
             borderBottom: "0 solid transparent",
             borderLeft: "20px solid #ff6b00",
           }}
         />
-      </div>
+      </Box>
 
       {/* Flame */}
-      <Flame />
-    </RocketContainer>
+      <Box
+        sx={{
+          position: "absolute",
+          bottom: 0,
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: "30px",
+          height: "40px",
+          background: "linear-gradient(to top, #ff6b00, #ffd700, #fff)",
+          clipPath: "polygon(50% 100%, 0% 0%, 100% 0%)",
+          animation: `${flameFlicker} 0.15s ease-in-out infinite`,
+        }}
+      />
+    </Box>
   );
 }

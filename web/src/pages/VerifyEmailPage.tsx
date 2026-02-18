@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
-import { useSearchParams, Link, useNavigate } from "react-router-dom";
+import { useSearchParams, Link } from "react-router-dom";
 import { Box, Container, Typography, Button, CircularProgress } from "@mui/material";
 import { authApi } from "../services/authApi";
 
 export function VerifyEmailPage() {
   const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
   const token = searchParams.get("token");
 
   const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
