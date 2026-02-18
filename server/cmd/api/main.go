@@ -10,6 +10,7 @@ import (
 	"github.com/stup1dbear/starthere/server/internal/repository"
 	"github.com/stup1dbear/starthere/server/internal/service"
 	"github.com/stup1dbear/starthere/server/pkg/database"
+	"github.com/stup1dbear/starthere/server/pkg/email"
 	"github.com/stup1dbear/starthere/server/pkg/jwt"
 	"github.com/stup1dbear/starthere/server/pkg/response"
 )
@@ -51,13 +52,28 @@ func main() {
 	// Initialize JWT manager
 	jwtManager := jwt.NewManager(cfg.JWT.SecretKey, cfg.JWT.ExpiryHours)
 
+	// Initialize email service
+	emailer, err := email.NewEmailer(&email.Config{
+		Driver:      cfg.Email.Driver,
+		FromAddress: cfg.Email.FromAddress,
+		FromName:    cfg.Email.FromName,
+		SMTPHost:    cfg.Email.SMTPHost,
+		SMTPPort:    cfg.Email.SMTPPort,
+		SMTPUser:    cfg.Email.SMTPUser,
+		SMTPPass:    cfg.Email.SMTPPass,
+	})
+	if err != nil {
+		log.Printf("Warning: Failed to initialize emailer, using log mode: %v", err)
+		emailer = email.NewLogEmailer()
+	}
+
 	// Initialize repositories
 	userRepo := repository.NewUserRepository(database.DB)
 	goalRepo := repository.NewGoalRepository(database.DB)
 	milestoneRepo := repository.NewMilestoneRepository(database.DB)
 
 	// Initialize services
-	authService := service.NewAuthService(userRepo, jwtManager)
+	authService := service.NewAuthService(userRepo, jwtManager, emailer, &cfg.Email)
 	goalService := service.NewGoalService(goalRepo)
 	milestoneService := service.NewMilestoneService(milestoneRepo, goalRepo)
 
@@ -81,6 +97,8 @@ func main() {
 		{
 			auth.POST("/register", authHandler.Register)
 			auth.POST("/login", authHandler.Login)
+			auth.GET("/verify", authHandler.VerifyEmail)
+			auth.POST("/resend-verification", authHandler.ResendVerificationEmail)
 		}
 
 		// Protected routes

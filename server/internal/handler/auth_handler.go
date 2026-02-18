@@ -30,7 +30,7 @@ func (h *AuthHandler) Register(c *gin.Context) {
 		return
 	}
 
-	authResp, err := h.authService.Register(&req)
+	registerResp, err := h.authService.Register(&req)
 	if err != nil {
 		if err.Error() == "email already registered" || err.Error() == "username already taken" {
 			response.BadRequest(c, err.Error())
@@ -40,7 +40,7 @@ func (h *AuthHandler) Register(c *gin.Context) {
 		return
 	}
 
-	response.Success(c, authResp)
+	response.SuccessWithMessage(c, "注册成功，请查收验证邮件", registerResp)
 }
 
 // Login handles user login
@@ -63,6 +63,10 @@ func (h *AuthHandler) Login(c *gin.Context) {
 			response.Unauthorized(c, err.Error())
 			return
 		}
+		if err.Error() == "email not verified. Please check your inbox for the verification link" {
+			response.Unauthorized(c, err.Error())
+			return
+		}
 		response.InternalServerError(c, "failed to login")
 		return
 	}
@@ -79,4 +83,36 @@ func (h *AuthHandler) Me(c *gin.Context) {
 		"id":       userID,
 		"username": username,
 	})
+}
+
+// VerifyEmail handles email verification via token
+func (h *AuthHandler) VerifyEmail(c *gin.Context) {
+	token := c.Query("token")
+	if token == "" {
+		response.BadRequest(c, "verification token is required")
+		return
+	}
+
+	err := h.authService.VerifyEmail(token)
+	if err != nil {
+		response.BadRequest(c, err.Error())
+		return
+	}
+
+	response.SuccessWithMessage(c, "邮箱验证成功，现在可以登录了", nil)
+}
+
+// ResendVerificationEmail handles resending verification email
+func (h *AuthHandler) ResendVerificationEmail(c *gin.Context) {
+	var req struct {
+		Email string `json:"email" binding:"required,email"`
+	}
+	if err := c.ShouldBindJSON(&req); err != nil {
+		response.BadRequest(c, "invalid email")
+		return
+	}
+
+	// Always return success to not reveal if email exists
+	h.authService.ResendVerificationEmail(req.Email)
+	response.SuccessWithMessage(c, "如果该邮箱已注册，验证邮件已重新发送", nil)
 }

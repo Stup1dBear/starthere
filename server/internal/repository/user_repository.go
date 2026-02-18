@@ -65,3 +65,18 @@ func (r *UserRepository) ExistsByUsername(username string) (bool, error) {
 	err := r.db.Model(&model.User{}).Where("username = ?", username).Count(&count).Error
 	return count > 0, err
 }
+
+// FindByVerificationToken finds a user by verification token
+func (r *UserRepository) FindByVerificationToken(token string) (*model.User, error) {
+	var user model.User
+	err := r.db.Where("verification_token = ?", token).First(&user).Error
+	if err != nil {
+		return nil, err
+	}
+	return &user, nil
+}
+
+// Update updates a user
+func (r *UserRepository) Update(user *model.User) error {
+	return r.db.Save(user).Error
+}

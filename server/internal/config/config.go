@@ -11,11 +11,12 @@ type Config struct {
 	Server   ServerConfig
 	Database DatabaseConfig
 	JWT      JWTConfig
+	Email    EmailConfig
 }
 
 // ServerConfig holds server configuration
 type ServerConfig struct {
-	Port   string
+	Port    string
 	GinMode string
 }
 
@@ -30,8 +31,20 @@ type DatabaseConfig struct {
 
 // JWTConfig holds JWT configuration
 type JWTConfig struct {
-	SecretKey     string
-	ExpiryHours   int
+	SecretKey   string
+	ExpiryHours int
+}
+
+// EmailConfig holds email configuration
+type EmailConfig struct {
+	Driver      string
+	FromAddress string
+	FromName    string
+	SMTPHost    string
+	SMTPPort    string
+	SMTPUser    string
+	SMTPPass    string
+	FrontendURL string
 }
 
 // loadEnvFile loads environment variables from .env file
@@ -65,7 +78,7 @@ func Load() *Config {
 	loadEnvFile()
 	return &Config{
 		Server: ServerConfig{
-			Port:   getEnv("SERVER_PORT", "8080"),
+			Port:    getEnv("SERVER_PORT", "8080"),
 			GinMode: getEnv("GIN_MODE", "debug"),
 		},
 		Database: DatabaseConfig{
@@ -78,6 +91,16 @@ func Load() *Config {
 		JWT: JWTConfig{
 			SecretKey:   getEnv("JWT_SECRET", "your-super-secret-jwt-key-change-this-in-production"),
 			ExpiryHours: getEnvAsInt("JWT_EXPIRY_HOURS", 24),
+		},
+		Email: EmailConfig{
+			Driver:      getEnv("EMAIL_DRIVER", "log"),
+			FromAddress: getEnv("EMAIL_FROM_ADDRESS", "noreply@star-there.com"),
+			FromName:    getEnv("EMAIL_FROM_NAME", "StartHere 星辰"),
+			SMTPHost:    getEnv("SMTP_HOST", ""),
+			SMTPPort:    getEnv("SMTP_PORT", ""),
+			SMTPUser:    getEnv("SMTP_USER", ""),
+			SMTPPass:    getEnv("SMTP_PASS", ""),
+			FrontendURL: getEnv("FRONTEND_URL", "http://localhost:5173"),
 		},
 	}
 }
