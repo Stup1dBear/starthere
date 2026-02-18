@@ -27,12 +27,16 @@ func main() {
 	// CORS middleware
 	r.Use(middleware.CORS())
 
-	// Health check
-	r.GET("/health", func(c *gin.Context) {
+	// Health check handler
+	healthHandler := func(c *gin.Context) {
 		response.Success(c, gin.H{
 			"status": "ok",
 		})
-	})
+	}
+
+	// Health check endpoints (support both GET and HEAD)
+	r.GET("/health", healthHandler)
+	r.HEAD("/health", healthHandler)
 
 	// Connect to database
 	if err := database.Connect(&cfg.Database); err != nil {
@@ -68,6 +72,10 @@ func main() {
 	// API routes
 	api := r.Group("/api/v1")
 	{
+		// Health check (public, no auth required)
+		api.GET("/health", healthHandler)
+		api.HEAD("/health", healthHandler)
+
 		// Auth routes (public)
 		auth := api.Group("/auth")
 		{
