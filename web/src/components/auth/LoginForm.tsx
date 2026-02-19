@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import { authApi } from "../../services/authApi";
 import { useAuthStore } from "../../stores/authStore";
+import { EightBitSpinner, EightBitColors } from "./EightBitIcon";
 
 export function LoginForm() {
   const navigate = useNavigate();
@@ -53,17 +54,30 @@ export function LoginForm() {
         component="h1"
         sx={{
           textAlign: "center",
-          mb: 3,
+          mb: 4,
           fontFamily: "'Courier New', monospace",
-          color: "#FFD700",
-          textShadow: "2px 2px 0 #4a9eff",
+          color: EightBitColors.yellow,
+          letterSpacing: "4px",
+          textShadow: `2px 2px 0 ${EightBitColors.orange}`,
         }}
       >
-        🚀 登录起航
+        登录起航
       </Typography>
 
       {error && (
-        <Alert severity="error" sx={{ mb: 2 }}>
+        <Alert
+          severity="error"
+          sx={{
+            mb: 2,
+            backgroundColor: EightBitColors.red,
+            color: EightBitColors.white,
+            border: `2px solid ${EightBitColors.darkPurple}`,
+            borderRadius: 0,
+            "& .MuiAlert-icon": {
+              color: EightBitColors.white,
+            },
+          }}
+        >
           {error}
         </Alert>
       )}
@@ -78,6 +92,28 @@ export function LoginForm() {
         sx={{
           "& .MuiOutlinedInput-root": {
             fontFamily: "'Courier New', monospace",
+            backgroundColor: EightBitColors.black,
+            color: EightBitColors.white,
+            border: `2px solid ${EightBitColors.lightGray}`,
+            borderRadius: 0,
+            "& fieldset": {
+              borderColor: EightBitColors.lightGray,
+              borderWidth: "2px",
+            },
+            "&:hover fieldset": {
+              borderColor: EightBitColors.blue,
+            },
+            "&.Mui-focused fieldset": {
+              borderColor: EightBitColors.yellow,
+              borderWidth: "3px",
+            },
+          },
+          "& .MuiInputLabel-root": {
+            fontFamily: "'Courier New', monospace",
+            color: EightBitColors.lightGray,
+            "&.Mui-focused": {
+              color: EightBitColors.yellow,
+            },
           },
         }}
       />
@@ -92,6 +128,28 @@ export function LoginForm() {
         sx={{
           "& .MuiOutlinedInput-root": {
             fontFamily: "'Courier New', monospace",
+            backgroundColor: EightBitColors.black,
+            color: EightBitColors.white,
+            border: `2px solid ${EightBitColors.lightGray}`,
+            borderRadius: 0,
+            "& fieldset": {
+              borderColor: EightBitColors.lightGray,
+              borderWidth: "2px",
+            },
+            "&:hover fieldset": {
+              borderColor: EightBitColors.blue,
+            },
+            "&.Mui-focused fieldset": {
+              borderColor: EightBitColors.yellow,
+              borderWidth: "3px",
+            },
+          },
+          "& .MuiInputLabel-root": {
+            fontFamily: "'Courier New', monospace",
+            color: EightBitColors.lightGray,
+            "&.Mui-focused": {
+              color: EightBitColors.yellow,
+            },
           },
         }}
       />
@@ -102,57 +160,74 @@ export function LoginForm() {
         variant="contained"
         disabled={loading}
         sx={{
-          mt: 3,
-          py: 1.5,
+          mt: 4,
+          py: 2,
           fontFamily: "'Courier New', monospace",
           fontWeight: "bold",
-          backgroundColor: "#90caf9",
-          color: "#0B0D17",
-          boxShadow: "4px 4px 0 #4a9eff",
+          backgroundColor: EightBitColors.green,
+          color: EightBitColors.black,
+          border: `4px solid ${EightBitColors.darkGreen}`,
+          boxShadow: `4px 4px 0 ${EightBitColors.darkGreen}`,
+          borderRadius: 0,
+          letterSpacing: "2px",
           "&:hover": {
-            backgroundColor: "#b8dcff",
+            backgroundColor: EightBitColors.yellow,
+            border: `4px solid ${EightBitColors.orange}`,
+            boxShadow: `4px 4px 0 ${EightBitColors.orange}`,
           },
           "&:disabled": {
-            backgroundColor: "#666",
+            backgroundColor: EightBitColors.darkGray,
+            border: `4px solid ${EightBitColors.black}`,
+            boxShadow: `4px 4px 0 ${EightBitColors.black}`,
+            color: EightBitColors.lightGray,
           },
         }}
       >
-        {loading ? "登录中..." : "🛸 登录"}
+        {loading ? (
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1, justifyContent: "center" }}>
+            <EightBitSpinner size={32} />
+            <span>登录中...</span>
+          </Box>
+        ) : (
+          "登录"
+        )}
       </Button>
 
-      <Box sx={{ textAlign: "center", mt: 2 }}>
+      <Box sx={{ textAlign: "center", mt: 3 }}>
         <Typography
           variant="body2"
           sx={{
             fontFamily: "'Courier New', monospace",
-            color: "#90caf9",
+            color: EightBitColors.lightGray,
+            letterSpacing: "1px",
           }}
         >
           还没有账号？{" "}
           <Link
             to="/register"
             style={{
-              color: "#FFD700",
+              color: EightBitColors.yellow,
               textDecoration: "none",
               fontWeight: "bold",
             }}
           >
-            立即注册 →
+            立即注册
           </Link>
         </Typography>
         <Typography
           variant="body2"
           sx={{
             fontFamily: "'Courier New', monospace",
-            color: "#888",
-            mt: 1,
+            color: EightBitColors.darkGray,
+            mt: 2,
+            letterSpacing: "1px",
           }}
         >
           没收到验证邮件？{" "}
           <Link
             to="/resend-verification"
             style={{
-              color: "#90caf9",
+              color: EightBitColors.blue,
               textDecoration: "none",
             }}
           >

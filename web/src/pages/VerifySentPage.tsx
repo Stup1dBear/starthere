@@ -1,5 +1,10 @@
 import { useSearchParams, Link } from "react-router-dom";
 import { Box, Container, Typography, Button } from "@mui/material";
+import {
+  EightBitEnvelope,
+  EightBitBackground,
+  EightBitColors,
+} from "../components/auth/EightBitIcon";
 
 export function VerifySentPage() {
   const [searchParams] = useSearchParams();
@@ -12,27 +17,12 @@ export function VerifySentPage() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        background: "linear-gradient(to bottom, #0B0D17, #1a1f3a)",
+        background: `linear-gradient(to bottom, ${EightBitColors.darkBlue}, #2a3a6a)`,
         position: "relative",
         overflow: "hidden",
       }}
     >
-      {/* Background stars */}
-      {Array.from({ length: 50 }).map((_, i) => (
-        <Box
-          key={i}
-          sx={{
-            position: "absolute",
-            width: Math.random() * 3 + 1 + "px",
-            height: Math.random() * 3 + 1 + "px",
-            backgroundColor: "#fff",
-            borderRadius: "50%",
-            top: Math.random() * 100 + "%",
-            left: Math.random() * 100 + "%",
-            opacity: Math.random() * 0.7 + 0.3,
-          }}
-        />
-      ))}
+      <EightBitBackground count={40} />
 
       <Container maxWidth="sm">
         <Box
@@ -40,30 +30,25 @@ export function VerifySentPage() {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            p: 4,
+            p: 5,
             textAlign: "center",
-            backgroundColor: "rgba(11, 13, 23, 0.9)",
-            borderRadius: "8px",
-            border: "4px solid #90caf9",
-            boxShadow: "8px 8px 0 #1a3a5c",
+            backgroundColor: EightBitColors.black,
+            border: `4px solid ${EightBitColors.lightGray}`,
+            boxShadow: `8px 8px 0 ${EightBitColors.darkGray}`,
           }}
         >
-          <Typography
-            variant="h1"
-            sx={{
-              fontSize: "80px",
-              mb: 2,
-            }}
-          >
-            📧
-          </Typography>
+          <EightBitEnvelope size={120} />
+          <Box sx={{ height: 2 }} />
 
           <Typography
             variant="h4"
             sx={{
               fontFamily: "'Courier New', monospace",
-              color: "#FFD700",
+              color: EightBitColors.yellow,
               mb: 2,
+              mt: 2,
+              letterSpacing: "4px",
+              textShadow: `2px 2px 0 ${EightBitColors.orange}`,
             }}
           >
             验证邮件已发送！
@@ -73,8 +58,9 @@ export function VerifySentPage() {
             variant="body1"
             sx={{
               fontFamily: "'Courier New', monospace",
-              color: "#fff",
+              color: EightBitColors.white,
               mb: 1,
+              letterSpacing: "1px",
             }}
           >
             请检查你的邮箱：
@@ -84,8 +70,12 @@ export function VerifySentPage() {
             variant="h6"
             sx={{
               fontFamily: "'Courier New', monospace",
-              color: "#90caf9",
-              mb: 3,
+              color: EightBitColors.green,
+              mb: 4,
+              letterSpacing: "2px",
+              border: `2px solid ${EightBitColors.darkGreen}`,
+              px: 3,
+              py: 1,
             }}
           >
             {email}
@@ -95,8 +85,9 @@ export function VerifySentPage() {
             variant="body2"
             sx={{
               fontFamily: "'Courier New', monospace",
-              color: "#888",
-              mb: 3,
+              color: EightBitColors.lightGray,
+              mb: 4,
+              letterSpacing: "1px",
             }}
           >
             点击邮件中的验证链接，即可完成注册。
@@ -104,7 +95,7 @@ export function VerifySentPage() {
             如果没收到邮件，可以检查垃圾箱或稍后重发。
           </Typography>
 
-          <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap", justifyContent: "center" }}>
+          <Box sx={{ display: "flex", gap: 3, flexWrap: "wrap", justifyContent: "center" }}>
             <Button
               component={Link}
               to="/login"
@@ -112,11 +103,18 @@ export function VerifySentPage() {
               sx={{
                 fontFamily: "'Courier New', monospace",
                 fontWeight: "bold",
-                backgroundColor: "#90caf9",
-                color: "#0B0D17",
-                boxShadow: "4px 4px 0 #4a9eff",
+                backgroundColor: EightBitColors.green,
+                color: EightBitColors.black,
+                border: `4px solid ${EightBitColors.darkGreen}`,
+                boxShadow: `4px 4px 0 ${EightBitColors.darkGreen}`,
+                borderRadius: 0,
+                py: 1.5,
+                px: 4,
+                letterSpacing: "2px",
                 "&:hover": {
-                  backgroundColor: "#b8dcff",
+                  backgroundColor: EightBitColors.yellow,
+                  border: `4px solid ${EightBitColors.orange}`,
+                  boxShadow: `4px 4px 0 ${EightBitColors.orange}`,
                 },
               }}
             >
@@ -129,11 +127,16 @@ export function VerifySentPage() {
               variant="outlined"
               sx={{
                 fontFamily: "'Courier New', monospace",
-                borderColor: "#90caf9",
-                color: "#90caf9",
+                border: `4px solid ${EightBitColors.blue}`,
+                color: EightBitColors.blue,
+                borderRadius: 0,
+                py: 1.5,
+                px: 4,
+                letterSpacing: "2px",
                 "&:hover": {
-                  borderColor: "#b8dcff",
-                  backgroundColor: "rgba(144, 202, 249, 0.1)",
+                  border: `4px solid ${EightBitColors.lavender}`,
+                  backgroundColor: "rgba(0,0,0,0.3)",
+                  color: EightBitColors.lavender,
                 },
               }}
             >

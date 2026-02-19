@@ -28,25 +28,42 @@ export class ApiClient {
     const url = `${API_BASE_URL}${endpoint}`;
     const token = this.getToken();
 
-    const headers: Record<string, string> = {};
-    if (!(options.body instanceof FormData)) {
-      headers["Content-Type"] = "application/json";
+    // Build headers
+    const headers = new Headers(options.headers || {});
+
+    // Set Content-Type if not FormData
+    if (!(options.body instanceof FormData) && !headers.has("Content-Type")) {
+      headers.set("Content-Type", "application/json");
     }
 
-    if (token) {
-      headers["Authorization"] = `Bearer ${token}`;
+    // Add Authorization header if token exists
+    if (token && !headers.has("Authorization")) {
+      headers.set("Authorization", `Bearer ${token}`);
     }
 
     const response = await fetch(url, {
       ...options,
-      headers: {
-        ...headers,
-        ...options.headers,
-      } as Record<string, string>,
+      headers,
     });
 
-    const data = await response.json();
-    return data as ApiResponse<T>;
+    // 尝试解析 JSON，即使状态码不是 2xx
+    let data: ApiResponse<T>;
+    try {
+      data = await response.json();
+    } catch {
+      // 如果解析失败，构造一个错误响应
+      data = {
+        success: false,
+        error: `HTTP ${response.status}: ${response.statusText}`,
+      };
+    }
+
+    // 确保即使后端没返回 success 字段，我们也有一个合理的默认值
+    if (typeof data.success !== 'boolean') {
+      data.success = response.ok;
+    }
+
+    return data;
   }
 
   async get<T>(endpoint: string): Promise<ApiResponse<T>> {

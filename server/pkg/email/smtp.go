@@ -19,13 +19,13 @@ func NewSMTPEmailer(cfg *Config) *SMTPEmailer {
 // Send sends an email via SMTP
 func (e *SMTPEmailer) Send(to, subject, htmlBody string) error {
 	// Build email headers
-	from := e.cfg.FromAddress
+	fromHeader := e.cfg.FromAddress
 	if e.cfg.FromName != "" {
-		from = fmt.Sprintf("%s <%s>", e.cfg.FromName, e.cfg.FromAddress)
+		fromHeader = fmt.Sprintf("%s <%s>", e.cfg.FromName, e.cfg.FromAddress)
 	}
 
 	headers := make(map[string]string)
-	headers["From"] = from
+	headers["From"] = fromHeader
 	headers["To"] = to
 	headers["Subject"] = subject
 	headers["MIME-Version"] = "1.0"
@@ -44,7 +44,7 @@ func (e *SMTPEmailer) Send(to, subject, htmlBody string) error {
 
 	// Use TLS if port is 465
 	if e.cfg.SMTPPort == "465" {
-		return e.sendWithTLS(addr, auth, from, to, message)
+		return e.sendWithTLS(addr, auth, e.cfg.FromAddress, to, message)
 	}
 
 	// Use STARTTLS for other ports (587, etc.)

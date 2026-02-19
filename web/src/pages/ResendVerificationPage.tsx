@@ -9,6 +9,12 @@ import {
   Alert,
 } from "@mui/material";
 import { authApi } from "../services/authApi";
+import {
+  EightBitEnvelope,
+  EightBitSpinner,
+  EightBitBackground,
+  EightBitColors,
+} from "../components/auth/EightBitIcon";
 
 export function ResendVerificationPage() {
   const [email, setEmail] = useState("");
@@ -37,38 +43,36 @@ export function ResendVerificationPage() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "linear-gradient(to bottom, #0B0D17, #1a1f3a)",
+          background: `linear-gradient(to bottom, ${EightBitColors.darkBlue}, #2a3a6a)`,
+          position: "relative",
+          overflow: "hidden",
         }}
       >
+        <EightBitBackground count={40} />
         <Container maxWidth="sm">
           <Box
             sx={{
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              p: 4,
+              p: 5,
               textAlign: "center",
-              backgroundColor: "rgba(11, 13, 23, 0.9)",
-              borderRadius: "8px",
-              border: "4px solid #90caf9",
-              boxShadow: "8px 8px 0 #1a3a5c",
+              backgroundColor: EightBitColors.black,
+              border: `4px solid ${EightBitColors.lightGray}`,
+              boxShadow: `8px 8px 0 ${EightBitColors.darkGray}`,
             }}
           >
-            <Typography
-              variant="h1"
-              sx={{
-                fontSize: "80px",
-                mb: 2,
-              }}
-            >
-              📧
-            </Typography>
+            <EightBitEnvelope size={120} />
+            <Box sx={{ height: 2 }} />
             <Typography
               variant="h4"
               sx={{
                 fontFamily: "'Courier New', monospace",
-                color: "#FFD700",
+                color: EightBitColors.yellow,
                 mb: 2,
+                mt: 2,
+                letterSpacing: "4px",
+                textShadow: `2px 2px 0 ${EightBitColors.orange}`,
               }}
             >
               邮件已发送！
@@ -77,8 +81,9 @@ export function ResendVerificationPage() {
               variant="body1"
               sx={{
                 fontFamily: "'Courier New', monospace",
-                color: "#fff",
-                mb: 3,
+                color: EightBitColors.white,
+                mb: 4,
+                letterSpacing: "1px",
               }}
             >
               如果该邮箱已注册，你会收到一封新的验证邮件。
@@ -90,11 +95,18 @@ export function ResendVerificationPage() {
               sx={{
                 fontFamily: "'Courier New', monospace",
                 fontWeight: "bold",
-                backgroundColor: "#90caf9",
-                color: "#0B0D17",
-                boxShadow: "4px 4px 0 #4a9eff",
+                backgroundColor: EightBitColors.green,
+                color: EightBitColors.black,
+                border: `4px solid ${EightBitColors.darkGreen}`,
+                boxShadow: `4px 4px 0 ${EightBitColors.darkGreen}`,
+                borderRadius: 0,
+                py: 1.5,
+                px: 4,
+                letterSpacing: "2px",
                 "&:hover": {
-                  backgroundColor: "#b8dcff",
+                  backgroundColor: EightBitColors.yellow,
+                  border: `4px solid ${EightBitColors.orange}`,
+                  boxShadow: `4px 4px 0 ${EightBitColors.orange}`,
                 },
               }}
             >
@@ -113,27 +125,12 @@ export function ResendVerificationPage() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        background: "linear-gradient(to bottom, #0B0D17, #1a1f3a)",
+        background: `linear-gradient(to bottom, ${EightBitColors.darkBlue}, #2a3a6a)`,
         position: "relative",
         overflow: "hidden",
       }}
     >
-      {/* Background stars */}
-      {Array.from({ length: 50 }).map((_, i) => (
-        <Box
-          key={i}
-          sx={{
-            position: "absolute",
-            width: Math.random() * 3 + 1 + "px",
-            height: Math.random() * 3 + 1 + "px",
-            backgroundColor: "#fff",
-            borderRadius: "50%",
-            top: Math.random() * 100 + "%",
-            left: Math.random() * 100 + "%",
-            opacity: Math.random() * 0.7 + 0.3,
-          }}
-        />
-      ))}
+      <EightBitBackground count={40} />
 
       <Container maxWidth="sm">
         <Box
@@ -143,29 +140,43 @@ export function ResendVerificationPage() {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            p: 4,
+            p: 5,
             width: "100%",
             maxWidth: 400,
-            backgroundColor: "rgba(11, 13, 23, 0.9)",
-            borderRadius: "8px",
-            border: "4px solid #90caf9",
-            boxShadow: "8px 8px 0 #1a3a5c",
+            backgroundColor: EightBitColors.black,
+            border: `4px solid ${EightBitColors.lightGray}`,
+            boxShadow: `8px 8px 0 ${EightBitColors.darkGray}`,
           }}
         >
           <Typography
             variant="h4"
             sx={{
               fontFamily: "'Courier New', monospace",
-              color: "#FFD700",
-              mb: 3,
+              color: EightBitColors.yellow,
+              mb: 4,
               textAlign: "center",
+              letterSpacing: "4px",
+              textShadow: `2px 2px 0 ${EightBitColors.orange}`,
             }}
           >
-            🔄 重发验证邮件
+            重发验证邮件
           </Typography>
 
           {error && (
-            <Alert severity="error" sx={{ mb: 2, width: "100%" }}>
+            <Alert
+              severity="error"
+              sx={{
+                mb: 2,
+                width: "100%",
+                backgroundColor: EightBitColors.red,
+                color: EightBitColors.white,
+                border: `2px solid ${EightBitColors.darkPurple}`,
+                borderRadius: 0,
+                "& .MuiAlert-icon": {
+                  color: EightBitColors.white,
+                },
+              }}
+            >
               {error}
             </Alert>
           )}
@@ -180,6 +191,28 @@ export function ResendVerificationPage() {
             sx={{
               "& .MuiOutlinedInput-root": {
                 fontFamily: "'Courier New', monospace",
+                backgroundColor: EightBitColors.black,
+                color: EightBitColors.white,
+                border: `2px solid ${EightBitColors.lightGray}`,
+                borderRadius: 0,
+                "& fieldset": {
+                  borderColor: EightBitColors.lightGray,
+                  borderWidth: "2px",
+                },
+                "&:hover fieldset": {
+                  borderColor: EightBitColors.blue,
+                },
+                "&.Mui-focused fieldset": {
+                  borderColor: EightBitColors.yellow,
+                  borderWidth: "3px",
+                },
+              },
+              "& .MuiInputLabel-root": {
+                fontFamily: "'Courier New', monospace",
+                color: EightBitColors.lightGray,
+                "&.Mui-focused": {
+                  color: EightBitColors.yellow,
+                },
               },
             }}
           />
@@ -190,40 +223,57 @@ export function ResendVerificationPage() {
             variant="contained"
             disabled={status === "loading" || !email}
             sx={{
-              mt: 3,
-              py: 1.5,
+              mt: 4,
+              py: 2,
               fontFamily: "'Courier New', monospace",
               fontWeight: "bold",
-              backgroundColor: "#90caf9",
-              color: "#0B0D17",
-              boxShadow: "4px 4px 0 #4a9eff",
+              backgroundColor: EightBitColors.green,
+              color: EightBitColors.black,
+              border: `4px solid ${EightBitColors.darkGreen}`,
+              boxShadow: `4px 4px 0 ${EightBitColors.darkGreen}`,
+              borderRadius: 0,
+              letterSpacing: "2px",
               "&:hover": {
-                backgroundColor: "#b8dcff",
+                backgroundColor: EightBitColors.yellow,
+                border: `4px solid ${EightBitColors.orange}`,
+                boxShadow: `4px 4px 0 ${EightBitColors.orange}`,
               },
               "&:disabled": {
-                backgroundColor: "#666",
+                backgroundColor: EightBitColors.darkGray,
+                border: `4px solid ${EightBitColors.black}`,
+                boxShadow: `4px 4px 0 ${EightBitColors.black}`,
+                color: EightBitColors.lightGray,
               },
             }}
           >
-            {status === "loading" ? "发送中..." : "发送验证邮件"}
+            {status === "loading" ? (
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1, justifyContent: "center" }}>
+                <EightBitSpinner size={32} />
+                <span>发送中...</span>
+              </Box>
+            ) : (
+              "发送验证邮件"
+            )}
           </Button>
 
-          <Box sx={{ textAlign: "center", mt: 2 }}>
+          <Box sx={{ textAlign: "center", mt: 3 }}>
             <Typography
               variant="body2"
               sx={{
                 fontFamily: "'Courier New', monospace",
-                color: "#90caf9",
+                color: EightBitColors.lightGray,
+                letterSpacing: "1px",
               }}
             >
               <Link
                 to="/login"
                 style={{
-                  color: "#FFD700",
+                  color: EightBitColors.yellow,
                   textDecoration: "none",
+                  fontWeight: "bold",
                 }}
               >
-                ← 返回登录
+                返回登录
               </Link>
             </Typography>
           </Box>
