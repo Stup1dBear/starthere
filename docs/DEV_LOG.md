@@ -29,6 +29,9 @@
 - [x] 完成注册-验证-登录全流程前端页面（8位像素风格）
 - [x] 添加 GitHub Actions 邮件相关环境变量配置
 - [x] 修复 TypeScript 编译错误
+- [x] 添加前端学习工作流到 CLAUDE.md
+- [x] 创建开发日志模板 docs/DEV_LOG.md
+- [x] 添加 make dev-log 命令
 
 **遇到的问题**：
 - SMTP 465 端口 TLS 认证失败 → 改用 80 端口
@@ -40,6 +43,7 @@
 - MUI 组件库使用（Box, keyframes）
 - Git 工作流程
 - GitHub Actions 环境变量配置
+- 建立前端学习工作流，避免被 AI 惯坏
 
 **下一步**：
 - [ ] 合并 feature/email-auth 到 main
