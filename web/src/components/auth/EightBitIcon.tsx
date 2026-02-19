@@ -60,7 +60,7 @@ function Pixel({ x, y, color, size = 8 }: { x: number; y: number; color: string;
 
 // 8位星星 - 成功/装饰用
 export function EightBitStar({ size = 96 }: { size?: number }) {
-  const p = size / 12;
+  const pixelSize = size / 12;
   return (
     <Box
       sx={{
@@ -82,8 +82,8 @@ export function EightBitStar({ size = 96 }: { size?: number }) {
         { x: 4, y: 8, c: COLORS.yellow }, { x: 5, y: 8, c: COLORS.yellow },
         { x: 3, y: 9, c: COLORS.yellow }, { x: 4, y: 9, c: COLORS.yellow }, { x: 5, y: 9, c: COLORS.yellow }, { x: 6, y: 9, c: COLORS.yellow },
         { x: 2, y: 10, c: COLORS.yellow }, { x: 3, y: 10, c: COLORS.yellow }, { x: 6, y: 10, c: COLORS.yellow }, { x: 7, y: 10, c: COLORS.yellow },
-      ].map((p, i) => (
-        <Pixel key={i} x={p.x} y={p.y} color={p.c} size={p} />
+      ].map((pixel, i) => (
+        <Pixel key={i} x={pixel.x} y={pixel.y} color={pixel.c} size={pixelSize} />
       ))}
     </Box>
   );
@@ -91,7 +91,7 @@ export function EightBitStar({ size = 96 }: { size?: number }) {
 
 // 8位叉号 - 错误用
 export function EightBitCross({ size = 96 }: { size?: number }) {
-  const p = size / 12;
+  const pixelSize = size / 12;
   return (
     <Box
       sx={{
@@ -111,8 +111,8 @@ export function EightBitCross({ size = 96 }: { size?: number }) {
         { x: 2, y: 8, c: COLORS.red }, { x: 3, y: 8, c: COLORS.red }, { x: 4, y: 8, c: COLORS.red }, { x: 7, y: 8, c: COLORS.red }, { x: 8, y: 8, c: COLORS.red }, { x: 9, y: 8, c: COLORS.red },
         { x: 1, y: 9, c: COLORS.red }, { x: 2, y: 9, c: COLORS.red }, { x: 3, y: 9, c: COLORS.red }, { x: 8, y: 9, c: COLORS.red }, { x: 9, y: 9, c: COLORS.red }, { x: 10, y: 9, c: COLORS.red },
         { x: 1, y: 10, c: COLORS.red }, { x: 2, y: 10, c: COLORS.red }, { x: 9, y: 10, c: COLORS.red }, { x: 10, y: 10, c: COLORS.red },
-      ].map((p, i) => (
-        <Pixel key={i} x={p.x} y={p.y} color={p.c} size={p} />
+      ].map((pixel, i) => (
+        <Pixel key={i} x={pixel.x} y={pixel.y} color={pixel.c} size={pixelSize} />
       ))}
     </Box>
   );
@@ -120,7 +120,7 @@ export function EightBitCross({ size = 96 }: { size?: number }) {
 
 // 8位信封 - 邮件用
 export function EightBitEnvelope({ size = 96 }: { size?: number }) {
-  const p = size / 12;
+  const pixelSize = size / 12;
   return (
     <Box
       sx={{
@@ -137,8 +137,8 @@ export function EightBitEnvelope({ size = 96 }: { size?: number }) {
         { x: 1, y: 6, c: COLORS.lightGray }, { x: 4, y: 6, c: COLORS.yellow }, { x: 5, y: 6, c: COLORS.yellow }, { x: 6, y: 6, c: COLORS.yellow }, { x: 7, y: 6, c: COLORS.yellow }, { x: 10, y: 6, c: COLORS.lightGray },
         { x: 1, y: 7, c: COLORS.lightGray }, { x: 3, y: 7, c: COLORS.lightGray }, { x: 4, y: 7, c: COLORS.lightGray }, { x: 5, y: 7, c: COLORS.lightGray }, { x: 6, y: 7, c: COLORS.lightGray }, { x: 7, y: 7, c: COLORS.lightGray }, { x: 8, y: 7, c: COLORS.lightGray }, { x: 10, y: 7, c: COLORS.lightGray },
         { x: 1, y: 8, c: COLORS.lightGray }, { x: 2, y: 8, c: COLORS.lightGray }, { x: 3, y: 8, c: COLORS.lightGray }, { x: 4, y: 8, c: COLORS.lightGray }, { x: 5, y: 8, c: COLORS.lightGray }, { x: 6, y: 8, c: COLORS.lightGray }, { x: 7, y: 8, c: COLORS.lightGray }, { x: 8, y: 8, c: COLORS.lightGray }, { x: 9, y: 8, c: COLORS.lightGray }, { x: 10, y: 8, c: COLORS.lightGray },
-      ].map((p, i) => (
-        <Pixel key={i} x={p.x} y={p.y} color={p.c} size={p} />
+      ].map((pixel, i) => (
+        <Pixel key={i} x={pixel.x} y={pixel.y} color={pixel.c} size={pixelSize} />
       ))}
     </Box>
   );
@@ -146,7 +146,7 @@ export function EightBitEnvelope({ size = 96 }: { size?: number }) {
 
 // 8位火箭 - 吉祥物
 export function EightBitRocket({ size = 128 }: { size?: number }) {
-  const p = size / 16;
+  const pixelSize = size / 16;
   return (
     <Box
       sx={{
@@ -172,8 +172,8 @@ export function EightBitRocket({ size = 128 }: { size?: number }) {
         { x: 6, y: 12, c: COLORS.yellow }, { x: 7, y: 12, c: COLORS.orange }, { x: 8, y: 12, c: COLORS.orange }, { x: 9, y: 12, c: COLORS.yellow },
         { x: 6, y: 13, c: COLORS.yellow }, { x: 7, y: 13, c: COLORS.yellow }, { x: 8, y: 13, c: COLORS.yellow }, { x: 9, y: 13, c: COLORS.yellow },
         { x: 7, y: 14, c: COLORS.yellow }, { x: 8, y: 14, c: COLORS.yellow },
-      ].map((p, i) => (
-        <Pixel key={i} x={p.x} y={p.y} color={p.c} size={p} />
+      ].map((pixel, i) => (
+        <Pixel key={i} x={pixel.x} y={pixel.y} color={pixel.c} size={pixelSize} />
       ))}
     </Box>
   );

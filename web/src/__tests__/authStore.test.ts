@@ -17,7 +17,7 @@ describe("authStore 业务逻辑", () => {
   describe("login 逻辑", () => {
     it("登录后应该设置用户、token 和认证状态", () => {
       // 模拟 store 状态
-      let state = {
+      let state: { user: any; token: string | null; isAuthenticated: boolean } = {
         user: null,
         token: null,
         isAuthenticated: false,
@@ -52,7 +52,7 @@ describe("authStore 业务逻辑", () => {
 
   describe("logout 逻辑", () => {
     it("登出后应该清空用户、token 和认证状态", () => {
-      let state = {
+      let state: { user: any; token: string | null; isAuthenticated: boolean } = {
         user: {
           id: "user-1",
           username: "testuser",
@@ -91,7 +91,7 @@ describe("authStore 业务逻辑", () => {
         created_at: Date.now(),
       };
 
-      let state = {
+      let state: { user: any; token: string | null; isAuthenticated: boolean } = {
         user: testUser,
         token: "test-token",
         isAuthenticated: true,
@@ -115,7 +115,7 @@ describe("authStore 业务逻辑", () => {
     });
 
     it("当没有用户时，setUserVerified 不应该报错", () => {
-      let state = {
+      let state: { user: any; token: string | null; isAuthenticated: boolean } = {
         user: null,
         token: null,
         isAuthenticated: false,
@@ -126,7 +126,7 @@ describe("authStore 业务逻辑", () => {
           state = {
             ...state,
             user: {
-              ...state.user,
+              ...(state.user as object),
               is_verified: true,
             },
           };
