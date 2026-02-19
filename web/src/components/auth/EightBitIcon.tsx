@@ -181,7 +181,7 @@ export function EightBitRocket({ size = 128 }: { size?: number }) {
 
 // 8位加载动画
 export function EightBitSpinner({ size = 48 }: { size?: number }) {
-  const p = size / 8;
+  const pixelSize = size / 8;
   return (
     <Box
       sx={{
@@ -207,17 +207,17 @@ export function EightBitSpinner({ size = 48 }: { size?: number }) {
         { x: 0, y: 3, c: COLORS.orange, a: 0.5 },
         { x: 1, y: 2, c: COLORS.yellow, a: 0.6 },
         { x: 2, y: 1, c: COLORS.yellow, a: 0.8 },
-      ].map((p, i) => (
+      ].map((pixel, i) => (
         <Box
           key={i}
           sx={{
             position: "absolute",
-            left: p.x * p,
-            top: p.y * p,
-            width: p,
-            height: p,
-            backgroundColor: p.c,
-            opacity: p.a,
+            left: pixel.x * pixelSize,
+            top: pixel.y * pixelSize,
+            width: pixelSize,
+            height: pixelSize,
+            backgroundColor: pixel.c,
+            opacity: pixel.a,
             animation: `${blink} 0.5s ease-in-out infinite`,
             animationDelay: `${i * 0.03}s`,
           }}
