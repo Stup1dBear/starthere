@@ -187,3 +187,46 @@ The developer has a strong backend/infrastructure background (Go, Python, C++, K
 7. **Document decisions** - Update relevant documentation when making significant changes.
 
 8. **Ask for clarification** - When requirements are ambiguous, ask rather than making assumptions.
+
+---
+
+## Frontend Learning Workflow (Important!)
+
+The developer wants to LEARN frontend, not just have AI write all the code. Follow this workflow:
+
+### 1. Task Discussion First
+- Before writing code, discuss the feature: what components are needed, what state is required
+- Let the developer think through the implementation approach first
+- AI only supplements or corrects the approach
+
+### 2. "You Write Main, AI Fills Details"
+- **Developer writes**: Component structure, main logic, state/props design
+- **AI fills in**: TypeScript type errors, complex styling, edge case handling
+
+### 3. "Why?" Before Code
+- When encountering unfamiliar APIs (useState, useEffect, etc.), pause to explain them
+- Let the developer read MUI docs and guess prop purposes before verifying
+
+### 4. Review + Explain After
+- After code is written, AI reviews it
+- Point out improvements and explain why (maintainability, performance, best practices)
+
+### 5. Regular Knowledge Retrospective
+- After completing a feature, summarize the React/MUI concepts used
+- Document pitfalls encountered
+- Organize into notes
+
+### Example Conversation Flow
+```
+Developer: I want to build a "reset password" feature
+AI: Good! First, what pages/components do you think we need?
+Developer: A page to enter email, then a page to set new password...
+AI: Correct! Also consider... (supplements)
+Developer: Okay, let me start writing
+(Developer writes component structure)
+Developer: Help me fix this type error?
+AI: (Explains the issue + fixes)
+...
+(Feature complete)
+AI: Let's summarize what we learned today...
+```
