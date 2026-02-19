@@ -37,6 +37,7 @@
 - SMTP 465 端口 TLS 认证失败 → 改用 80 端口
 - 前端构建失败 → 修复 EightBitIcon.tsx 变量名冲突
 - 变量名冲突：`p` 被重复声明 → 重命名为 `pixelSize`
+- authStore.test.ts 类型错误 → 添加类型注解 `{ user: any; token: string | null; isAuthenticated: boolean }`
 
 **学习要点**：
 - React + TypeScript 组件开发
