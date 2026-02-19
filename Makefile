@@ -12,6 +12,7 @@
 #   make deploy-server      - 部署后端到服务器
 #   make deploy-all         - 部署全部到服务器
 #   make logs               - 查看本地服务日志
+#   make dev-log            - 编辑开发日志
 #
 # ===============================================
 
@@ -48,6 +49,9 @@ help:
 	@echo "    make down               - 停止本地开发环境"
 	@echo "    make logs               - 查看服务日志"
 	@echo "    make restart            - 重启本地服务"
+	@echo ""
+	@echo "  开发日志："
+	@echo "    make dev-log            - 编辑开发日志"
 	@echo ""
 	@echo "  部署命令："
 	@echo "    make push-web           - 推送前端镜像到 GHCR"
@@ -262,4 +266,14 @@ test-server:
 .PHONY: test-all
 test-all: test-web test-server
 	@echo "所有测试运行完成！"
+
+# ===============================================
+# 开发日志
+# ===============================================
+
+.PHONY: dev-log
+dev-log:
+	@echo "打开开发日志..."
+	"$$EDITOR" docs/DEV_LOG.md || vim docs/DEV_LOG.md || nano docs/DEV_LOG.md || open docs/DEV_LOG.md
+	@echo "开发日志已更新，别忘了提交！"
 
