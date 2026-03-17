@@ -9,38 +9,55 @@
 # 4. 推送镜像到 GitHub Container Registry (ghcr.io)
 # 5. SSH 到服务器，拉取新镜像并重启容器
 #
-# 需要配置的 GitHub Secrets：
-# - DEPLOY_HOST: 服务器 IP (115.191.33.64)
-# - DEPLOY_USER: SSH 用户名 (root)
-# - DEPLOY_KEY: SSH 私钥（用于免密登录）
-# - DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME
+# 需要配置的 GitHub Environments：
+# Secrets:
+# - DEPLOY_KEY
+# - DB_PASSWORD
 # - JWT_SECRET
+# - SMTP_PASS
+#
+# Variables:
+# - DEPLOY_HOST, DEPLOY_USER
+# - DB_HOST, DB_PORT, DB_USER, DB_NAME
 # - EMAIL_DRIVER, EMAIL_FROM_ADDRESS, EMAIL_FROM_NAME
-# - SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS
+# - SMTP_HOST, SMTP_PORT, SMTP_USER
 # - FRONTEND_URL
+# - IMAGE_TAG, WEB_CONTAINER_NAME, SERVER_CONTAINER_NAME
+# - WEB_PORT, SERVER_PORT, WEB_PUBLIC_URL, API_BASE_URL
 # ===============================================
 
-name: Deploy to Production
+name: Deploy
 
-# 触发条件：推送到 main 分支
 on:
   push:
     branches:
       - main
-  # 可选：手动触发
   workflow_dispatch:
+    inputs:
+      environment:
+        description: "Deployment target"
+        required: true
+        default: staging
+        type: choice
+        options:
+          - staging
+          - production
+      ref:
+        description: "Git ref to deploy (optional)"
+        required: false
+        type: string
 
 env:
   REGISTRY: ghcr.io
-  # IMAGE_NAME 将在运行时由 GITHUB_REPOSITORY 转小写生成
 
 jobs:
-  # ========== 测试 Job：先运行测试 ==========
   test:
     runs-on: ubuntu-latest
     steps:
       - name: 检出代码
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref }}
 
       - name: 设置 Go
         uses: actions/setup-go@v5
@@ -56,32 +73,53 @@ jobs:
       - name: 运行后端测试
         run: cd server && go test -v ./...
 
-  # ========== 构建和部署 Job：仅在 test 通过后运行 ==========
   build-and-deploy:
     needs: test
     runs-on: ubuntu-latest
-
-    # 需要写权限以推送镜像到 ghcr.io
+    environment:
+      name: ${{ github.event_name == 'workflow_dispatch' && inputs.environment || 'production' }}
     permissions:
       contents: read
       packages: write
 
     steps:
-      # ========== 1. 检出代码 ==========
       - name: 检出代码
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref }}
 
-      # ========== 1.1 生成小写镜像名 ==========
       - name: 生成小写镜像名
+        id: image-names
         run: |
-          echo "IMAGE_WEB=${GITHUB_REPOSITORY,,}/web" >> $GITHUB_ENV
-          echo "IMAGE_SERVER=${GITHUB_REPOSITORY,,}/server" >> $GITHUB_ENV
+          echo "image_web=${GITHUB_REPOSITORY,,}/web" >> "$GITHUB_OUTPUT"
+          echo "image_server=${GITHUB_REPOSITORY,,}/server" >> "$GITHUB_OUTPUT"
 
-      # ========== 2. 设置 Docker Buildx（支持跨平台构建）==========
+      - name: 生成部署配置
+        id: deploy-config
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.environment }}" = "staging" ]; then
+            echo "target_env=staging" >> "$GITHUB_OUTPUT"
+            echo "image_tag=${{ vars.IMAGE_TAG || 'staging-latest' }}" >> "$GITHUB_OUTPUT"
+            echo "web_container_name=${{ vars.WEB_CONTAINER_NAME || 'starthere-web-staging' }}" >> "$GITHUB_OUTPUT"
+            echo "server_container_name=${{ vars.SERVER_CONTAINER_NAME || 'starthere-server-staging' }}" >> "$GITHUB_OUTPUT"
+            echo "web_port=${{ vars.WEB_PORT || '8081' }}" >> "$GITHUB_OUTPUT"
+            echo "server_port=${{ vars.SERVER_PORT || '18080' }}" >> "$GITHUB_OUTPUT"
+            echo "web_public_url=${{ vars.WEB_PUBLIC_URL || 'https://staging.star-there.com' }}" >> "$GITHUB_OUTPUT"
+            echo "api_base_url=${{ vars.API_BASE_URL || 'https://staging.star-there.com/api/v1' }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "target_env=production" >> "$GITHUB_OUTPUT"
+            echo "image_tag=${{ vars.IMAGE_TAG || 'latest' }}" >> "$GITHUB_OUTPUT"
+            echo "web_container_name=${{ vars.WEB_CONTAINER_NAME || 'starthere-web' }}" >> "$GITHUB_OUTPUT"
+            echo "server_container_name=${{ vars.SERVER_CONTAINER_NAME || 'starthere-server' }}" >> "$GITHUB_OUTPUT"
+            echo "web_port=${{ vars.WEB_PORT || '80' }}" >> "$GITHUB_OUTPUT"
+            echo "server_port=${{ vars.SERVER_PORT || '8080' }}" >> "$GITHUB_OUTPUT"
+            echo "web_public_url=${{ vars.WEB_PUBLIC_URL || 'https://star-there.com' }}" >> "$GITHUB_OUTPUT"
+            echo "api_base_url=${{ vars.API_BASE_URL || 'https://star-there.com/api/v1' }}" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: 设置 Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      # ========== 3. 登录到 GitHub Container Registry ==========
       - name: 登录到 GHCR
         uses: docker/login-action@v3
         with:
@@ -89,27 +127,6 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # ========== 4. 提取前端镜像元数据 ==========
-      - name: 提取前端 Docker 元数据
-        id: meta-web
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_WEB }}
-          tags: |
-            type=sha,prefix={{branch}}-
-            type=raw,value=latest,enable={{is_default_branch}}
-
-      # ========== 5. 后端镜像元数据 ==========
-      - name: 提取后端 Docker 元数据
-        id: meta-server
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_SERVER }}
-          tags: |
-            type=sha,prefix={{branch}}-
-            type=raw,value=latest,enable={{is_default_branch}}
-
-      # ========== 6. 构建并推送前端 Docker 镜像 ==========
       - name: 构建并推送前端镜像
         uses: docker/build-push-action@v5
         with:
@@ -117,12 +134,14 @@ jobs:
           file: ./web/Dockerfile
           platforms: linux/amd64
           push: true
-          tags: ${{ steps.meta-web.outputs.tags }}
-          labels: ${{ steps.meta-web.outputs.labels }}
+          build-args: |
+            VITE_API_BASE_URL=${{ steps.deploy-config.outputs.api_base_url }}
+          tags: |
+            ${{ env.REGISTRY }}/${{ steps.image-names.outputs.image_web }}:${{ steps.deploy-config.outputs.image_tag }}
+            ${{ env.REGISTRY }}/${{ steps.image-names.outputs.image_web }}:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      # ========== 7. 构建并推送后端 Docker 镜像 ==========
       - name: 构建并推送后端镜像
         uses: docker/build-push-action@v5
         with:
@@ -130,118 +149,109 @@ jobs:
           file: ./server/Dockerfile
           platforms: linux/amd64
           push: true
-          tags: ${{ steps.meta-server.outputs.tags }}
-          labels: ${{ steps.meta-server.outputs.labels }}
+          tags: |
+            ${{ env.REGISTRY }}/${{ steps.image-names.outputs.image_server }}:${{ steps.deploy-config.outputs.image_tag }}
+            ${{ env.REGISTRY }}/${{ steps.image-names.outputs.image_server }}:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      # ========== 8. 部署到服务器 ==========
-      - name: 部署到生产服务器
+      - name: 部署到目标服务器
         uses: appleboy/ssh-action@v1.0.0
         with:
-          host: ${{ secrets.DEPLOY_HOST }}
-          username: ${{ secrets.DEPLOY_USER }}
+          host: ${{ vars.DEPLOY_HOST }}
+          username: ${{ vars.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_KEY }}
           script: |
-            # 登录到 GitHub Container Registry
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-            # ========== 部署前端 ==========
-            echo; echo "=== 部署前端..."
-            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_WEB }}:latest
-            docker stop starthere-web || true
-            docker rm starthere-web || true
+            echo; echo "=== Deploying frontend to ${{ steps.deploy-config.outputs.target_env }}..."
+            docker pull ${{ env.REGISTRY }}/${{ steps.image-names.outputs.image_web }}:${{ steps.deploy-config.outputs.image_tag }}
+            docker stop ${{ steps.deploy-config.outputs.web_container_name }} || true
+            docker rm ${{ steps.deploy-config.outputs.web_container_name }} || true
             docker run -d \
-              --name starthere-web \
+              --name ${{ steps.deploy-config.outputs.web_container_name }} \
               --restart unless-stopped \
-              -p 80:80 \
-              ${{ env.REGISTRY }}/${{ env.IMAGE_WEB }}:latest
-            echo "✅ 前端部署完成"
+              -p ${{ steps.deploy-config.outputs.web_port }}:80 \
+              ${{ env.REGISTRY }}/${{ steps.image-names.outputs.image_web }}:${{ steps.deploy-config.outputs.image_tag }}
+            echo "Frontend deployed"
 
-            # ========== 部署后端 ==========
-            echo; echo "=== 部署后端..."
-            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_SERVER }}:latest
-            docker stop starthere-server || true
-            docker rm starthere-server || true
+            echo; echo "=== Deploying backend to ${{ steps.deploy-config.outputs.target_env }}..."
+            docker pull ${{ env.REGISTRY }}/${{ steps.image-names.outputs.image_server }}:${{ steps.deploy-config.outputs.image_tag }}
+            docker stop ${{ steps.deploy-config.outputs.server_container_name }} || true
+            docker rm ${{ steps.deploy-config.outputs.server_container_name }} || true
             docker run -d \
-              --name starthere-server \
+              --name ${{ steps.deploy-config.outputs.server_container_name }} \
               --restart unless-stopped \
-              -p 8080:8080 \
+              -p ${{ steps.deploy-config.outputs.server_port }}:8080 \
               -e SERVER_PORT=8080 \
               -e GIN_MODE=release \
-              -e DB_HOST=${{ secrets.DB_HOST }} \
-              -e DB_PORT=${{ secrets.DB_PORT }} \
-              -e DB_USER=${{ secrets.DB_USER }} \
+              -e DB_HOST=${{ vars.DB_HOST }} \
+              -e DB_PORT=${{ vars.DB_PORT }} \
+              -e DB_USER=${{ vars.DB_USER }} \
               -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
-              -e DB_NAME=${{ secrets.DB_NAME }} \
+              -e DB_NAME=${{ vars.DB_NAME }} \
               -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
               -e JWT_EXPIRY_HOURS=24 \
-              -e EMAIL_DRIVER=${{ secrets.EMAIL_DRIVER }} \
-              -e EMAIL_FROM_ADDRESS=${{ secrets.EMAIL_FROM_ADDRESS }} \
-              -e EMAIL_FROM_NAME="${{ secrets.EMAIL_FROM_NAME }}" \
-              -e SMTP_HOST=${{ secrets.SMTP_HOST }} \
-              -e SMTP_PORT=${{ secrets.SMTP_PORT }} \
-              -e SMTP_USER=${{ secrets.SMTP_USER }} \
+              -e EMAIL_DRIVER=${{ vars.EMAIL_DRIVER }} \
+              -e EMAIL_FROM_ADDRESS=${{ vars.EMAIL_FROM_ADDRESS }} \
+              -e EMAIL_FROM_NAME="${{ vars.EMAIL_FROM_NAME }}" \
+              -e SMTP_HOST=${{ vars.SMTP_HOST }} \
+              -e SMTP_PORT=${{ vars.SMTP_PORT }} \
+              -e SMTP_USER=${{ vars.SMTP_USER }} \
               -e SMTP_PASS=${{ secrets.SMTP_PASS }} \
-              -e FRONTEND_URL=${{ secrets.FRONTEND_URL }} \
-              ${{ env.REGISTRY }}/${{ env.IMAGE_SERVER }}:latest
-            echo "✅ 后端部署完成"
+              -e FRONTEND_URL=${{ vars.FRONTEND_URL }} \
+              ${{ env.REGISTRY }}/${{ steps.image-names.outputs.image_server }}:${{ steps.deploy-config.outputs.image_tag }}
+            echo "Backend deployed"
 
-            # ========== 清理 ==========
-            echo; echo "清理..."
+            echo; echo "=== Smoke checks..."
+            sleep 8
+            curl -fsS http://127.0.0.1:${{ steps.deploy-config.outputs.server_port }}/health >/dev/null
+            curl -fsS http://127.0.0.1:${{ steps.deploy-config.outputs.web_port }}/ >/dev/null
+            echo "Smoke checks passed"
+
+            echo; echo "=== Cleanup..."
             docker image prune -f
             docker logout ghcr.io
 
-            # ========== 验证 ==========
-            echo; echo "运行中的容器："
+            echo; echo "Running containers:"
             docker ps | grep starthere
 
-      # ========== 9. 通知部署结果 ==========
       - name: 部署成功通知
         if: success()
         run: |
-          echo "✅ 部署成功！"
-          echo "🌐 前端: https://star-there.com"
-          echo "🔧 后端: http://${{ secrets.DEPLOY_HOST }}:8080"
+          echo "Deployment succeeded"
+          echo "Target environment: ${{ steps.deploy-config.outputs.target_env }}"
+          echo "Web URL: ${{ steps.deploy-config.outputs.web_public_url }}"
+          echo "API base URL: ${{ steps.deploy-config.outputs.api_base_url }}"
 
-# ===============================================
-# 配置说明
-# ===============================================
+# GitHub environments expected:
+# - production
+# - staging
 #
-# 需要在 GitHub 仓库设置 Secrets：
-# 1. 进入仓库 → Settings → Secrets and variables → Actions
-# 2. 添加以下 secrets：
-#    - DEPLOY_HOST: 服务器 IP (115.191.33.64)
-#    - DEPLOY_USER: SSH 用户名 (root)
-#    - DEPLOY_KEY: SSH 私钥内容（完整内容，包含 BEGIN/END）
-#    - DB_HOST: 数据库主机地址
-#    - DB_PORT: 数据库端口 (3306)
-#    - DB_USER: 数据库用户名
-#    - DB_PASSWORD: 数据库密码
-#    - DB_NAME: 数据库名称
-#    - JWT_SECRET: JWT 密钥（随机字符串）
-#    - EMAIL_DRIVER: 邮件驱动 (smtp)
-#    - EMAIL_FROM_ADDRESS: 发件邮箱 (no-reply@star-there.com)
-#    - EMAIL_FROM_NAME: 发件人名称 (StartHere 星辰)
-#    - SMTP_HOST: SMTP 服务器 (smtpdm.aliyun.com)
-#    - SMTP_PORT: SMTP 端口 (80)
-#    - SMTP_USER: SMTP 用户名 (no-reply@star-there.com)
-#    - SMTP_PASS: SMTP 密码
-#    - FRONTEND_URL: 前端地址 (https://star-there.com)
+# Each environment should provide these secrets:
+# - DEPLOY_KEY
+# - DB_PASSWORD
+# - JWT_SECRET
+# - SMTP_PASS
 #
-# 如何生成并配置 SSH 密钥对（如果还没有）：
-#   # 1. 本地生成密钥对
-#   ssh-keygen -t ed25519 -C "github-actions" -f ~/.ssh/github_actions_key
-#
-#   # 2. 将公钥添加到服务器
-#   ssh-copy-id -i ~/.ssh/github_actions_key.pub root@115.191.33.64
-#   # 或手动: cat ~/.ssh/github_actions_key.pub >> ~/.ssh/authorized_keys
-#
-#   # 3. 将私钥内容复制到 GitHub Secrets
-#   cat ~/.ssh/github_actions_key  # 全部内容复制到 DEPLOY_KEY
-#
-# 注意事项：
-# - GITHUB_TOKEN 是自动提供的，无需手动配置
-# - 镜像会自动推送到 ghcr.io/你的用户名/starthere/web 和 /server
-# - 首次需将镜像权限设为 public（ghcr.io 包设置）
-# ===============================================
+# Each environment should provide these variables:
+# - DEPLOY_HOST
+# - DEPLOY_USER
+# - DB_HOST
+# - DB_PORT
+# - DB_USER
+# - DB_NAME
+# - EMAIL_DRIVER
+# - EMAIL_FROM_ADDRESS
+# - EMAIL_FROM_NAME
+# - SMTP_HOST
+# - SMTP_PORT
+# - SMTP_USER
+# - FRONTEND_URL
+# - IMAGE_TAG
+# - WEB_CONTAINER_NAME
+# - SERVER_CONTAINER_NAME
+# - WEB_PORT
+# - SERVER_PORT
+# - WEB_PUBLIC_URL
+# - API_BASE_URL
