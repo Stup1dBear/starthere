@@ -19,6 +19,10 @@ FROM node:20-alpine AS builder
 # 设置工作目录（容器内的路径）
 WORKDIR /app
 
+# 允许在镜像构建时注入前端 API 地址，避免 staging 前端误连生产后端
+ARG VITE_API_BASE_URL
+ENV VITE_API_BASE_URL=${VITE_API_BASE_URL}
+
 # 先复制 package.json 和 lock 文件
 # 为什么单独复制？利用 Docker 缓存层
 # 如果 package.json 没变，下次构建会跳过 npm install

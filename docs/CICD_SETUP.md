@@ -1,93 +1,68 @@
 # GitHub Actions CI/CD 配置指南
 
-> 自动化部署配置步骤，按顺序执行即可完成配置
+> 当前部署工作流支持 `production` 自动部署，以及手动触发 `staging` 或 `production` 部署。
 
 ---
 
 ## 📋 前置条件检查
 
-- [x] 服务器 IP: `115.191.33.64`
 - [x] 服务器已安装 Docker
-- [x] 服务器项目目录: `/root/starthere`
-- [ ] 生成 SSH 密钥对用于 GitHub Actions
-- [ ] 配置 GitHub Secrets
+- [ ] 已生成 GitHub Actions 使用的 SSH 密钥
+- [ ] GitHub 已创建 `production` 和 `staging` 两个 Environments
+- [ ] 两个 Environment 都已配置所需 secrets
+- [ ] `staging` 已准备独立数据库和访问入口
 
 ---
 
 ## 🔑 步骤 1: 生成 SSH 密钥对（如果还没有）
 
-在本地 Mac 上执行：
+在本地执行：
 
 ```bash
-# 生成专用于 GitHub Actions 的密钥对
 ssh-keygen -t ed25519 -C "github-actions" -f ~/.ssh/github_actions_key
-
-# 查看公钥内容
 cat ~/.ssh/github_actions_key.pub
 ```
 
-将公钥添加到服务器（两种方式任选其一）：
-
-**方式 A：使用 ssh-copy-id（推荐）**
+把公钥加到服务器：
 
 ```bash
 ssh-copy-id -i ~/.ssh/github_actions_key.pub root@115.191.33.64
 ```
 
-**方式 B：手动添加**
-
-```bash
-# 1. 复制公钥内容
-cat ~/.ssh/github_actions_key.pub
-
-# 2. SSH 到服务器
-ssh root@115.191.33.64
-
-# 3. 追加到 authorized_keys
-echo "刚才复制的公钥内容" >> ~/.ssh/authorized_keys
-
-# 4. 设置权限
-chmod 600 ~/.ssh/authorized_keys
-chmod 700 ~/.ssh
-```
-
-验证密钥是否生效：
+验证：
 
 ```bash
 ssh -i ~/.ssh/github_actions_key root@115.191.33.64
-# 应该无需密码即可登录
 ```
 
 ---
 
-## 🔐 步骤 2: 配置 GitHub Secrets
+## 🔐 步骤 2: 创建 GitHub Environments
 
-1. 打开仓库页面：https://github.com/Stup1dBear/starthere
+1. 打开仓库页面
+2. 进入 **Settings** → **Environments**
+3. 创建两个 environments：
+   - `production`
+   - `staging`
 
-2. 进入 **Settings** → **Secrets and variables** → **Actions**
+这两个 environment 使用**同名 secret**，但值可以不同。
 
-3. 点击 **New repository secret**，添加以下 3 个 secrets：
+---
 
-### Secret 1: DEPLOY_HOST
+## 🧾 步骤 3: 配置必需 Secrets
 
-```
-Name: DEPLOY_HOST
-Value: 115.191.33.64
-```
+在 `production` 和 `staging` 中都配置以下 secrets：
 
-### Secret 2: DEPLOY_USER
+- `DEPLOY_KEY`
+- `DB_PASSWORD`
+- `JWT_SECRET`
+- `SMTP_PASS`
 
-```
-Name: DEPLOY_USER
-Value: root
-```
+说明：
 
-### Secret 3: DEPLOY_KEY
-
-```
-Name: DEPLOY_KEY
-Value: <SSH 私钥完整内容>
-```
+- `production` 和 `staging` 可以使用同一台主机，但不能共用数据库
+- `staging` 建议使用单独的 `JWT_SECRET`
+- `staging` 第一阶段建议 `EMAIL_DRIVER=log`
 
 获取私钥内容：
 
@@ -95,205 +70,199 @@ Value: <SSH 私钥完整内容>
 cat ~/.ssh/github_actions_key
 ```
 
-复制**全部内容**（包括 `-----BEGIN OPENSSH PRIVATE KEY-----` 和 `-----END OPENSSH PRIVATE KEY-----`），粘贴到 Value 中。
-
 ---
 
-## 📦 步骤 3: 配置 GitHub 容器镜像权限
+## ⚙️ 步骤 4: 配置可选 Environment Variables
 
-推送的镜像默认是私有的，需要设置为公开（或保持私有并配置 pull secret）。
+在 GitHub Environment 中配置以下变量：
 
-### 方式 A：设为公开（推荐，简单）
+- `DEPLOY_HOST`
+- `DEPLOY_USER`
+- `DB_HOST`
+- `DB_PORT`
+- `DB_USER`
+- `DB_NAME`
+- `EMAIL_DRIVER`
+- `EMAIL_FROM_ADDRESS`
+- `EMAIL_FROM_NAME`
+- `SMTP_HOST`
+- `SMTP_PORT`
+- `SMTP_USER`
+- `FRONTEND_URL`
 
-1. 首次推送后，进入 https://github.com/Stup1dBear?tab=packages
-2. 找到 `starthere/web` 包
-3. 点击 **Package settings**
-4. 滚动到底部 **Danger Zone**
-5. 点击 **Change visibility** → **Public**
+- `IMAGE_TAG`
+- `WEB_CONTAINER_NAME`
+- `SERVER_CONTAINER_NAME`
+- `WEB_PORT`
+- `SERVER_PORT`
+- `WEB_PUBLIC_URL`
+- `API_BASE_URL`
 
-### 方式 B：保持私有（需额外配置）
+推荐的 `staging` 默认值：
 
-服务器需登录 ghcr.io 才能拉取私有镜像：
+```text
+DEPLOY_HOST=115.191.33.64
+DEPLOY_USER=root
+DB_HOST=192.168.1.20
+DB_PORT=3306
+DB_USER=star-there-server-staging
+DB_NAME=star-there-staging
+EMAIL_DRIVER=log
+EMAIL_FROM_ADDRESS=no-reply@star-there.com
+EMAIL_FROM_NAME=StarThereStaging
+SMTP_HOST=smtpdm.aliyun.com
+SMTP_PORT=80
+SMTP_USER=no-reply@star-there.com
+FRONTEND_URL=https://staging.star-there.com
+IMAGE_TAG=staging-latest
+WEB_CONTAINER_NAME=starthere-web-staging
+SERVER_CONTAINER_NAME=starthere-server-staging
+WEB_PORT=8081
+SERVER_PORT=18080
+WEB_PUBLIC_URL=https://staging.star-there.com
+API_BASE_URL=https://staging.star-there.com/api/v1
+```
 
-```bash
-# 在服务器上执行（使用你的 GitHub Personal Access Token）
-docker login ghcr.io -u Stup1dBear -p <YOUR_PAT>
+推荐的 `production` 默认值：
+
+```text
+DEPLOY_HOST=115.191.33.64
+DEPLOY_USER=root
+DB_HOST=192.168.1.20
+DB_PORT=3306
+DB_USER=star-there-server
+DB_NAME=star-there
+EMAIL_DRIVER=smtp
+EMAIL_FROM_ADDRESS=no-reply@star-there.com
+EMAIL_FROM_NAME=StarThere
+SMTP_HOST=smtpdm.aliyun.com
+SMTP_PORT=80
+SMTP_USER=no-reply@star-there.com
+FRONTEND_URL=https://star-there.com
+IMAGE_TAG=latest
+WEB_CONTAINER_NAME=starthere-web
+SERVER_CONTAINER_NAME=starthere-server
+WEB_PORT=80
+SERVER_PORT=8080
+WEB_PUBLIC_URL=https://star-there.com
+API_BASE_URL=https://star-there.com/api/v1
 ```
 
 ---
 
-## ✅ 步骤 4: 验证配置
+## 📦 步骤 5: 镜像仓库权限
 
-### 4.1 检查 Secrets 是否已添加
+如果 GHCR 镜像是私有的，服务器需要能登录 `ghcr.io` 拉取镜像。
 
-进入仓库 **Settings** → **Secrets and variables** → **Actions**，应该看到：
+如果想降低复杂度，首次可以把相关包设为 public。
 
-- ✅ DEPLOY_HOST
-- ✅ DEPLOY_USER
-- ✅ DEPLOY_KEY
+---
 
-### 4.2 触发首次部署
+## ✅ 步骤 6: 验证配置
 
-**方式 A：推送代码触发**
+### 6.1 检查 Environments
+
+进入 **Settings** → **Environments**，确认存在：
+
+- `production`
+- `staging`
+
+并且每个 environment 都配置了上面的 secrets 和 variables。
+
+### 6.2 触发 Production 部署
+
+推送到 `main`：
 
 ```bash
-# 在本地项目目录
-cd /Users/zhengyi/projects/starthere
-
-# 提交并推送（确保在 main 分支）
 git add .
-git commit -m "feat: 配置 CI/CD 自动部署"
+git commit -m "feat: update production"
 git push origin main
 ```
 
-**方式 B：手动触发**
+### 6.3 触发 Staging 部署
 
-1. 进入仓库 **Actions** 页面
-2. 选择 **Deploy to Production** 工作流
-3. 点击 **Run workflow** → **Run workflow**
+1. 打开 **Actions**
+2. 选择 **Deploy**
+3. 点击 **Run workflow**
+4. `environment` 选 `staging`
+5. `ref` 选要部署的分支或 commit
+6. 运行
 
-### 4.3 查看部署日志
-
-1. 进入 **Actions** 页面
-2. 点击最新的工作流运行
-3. 查看每个步骤的日志
+### 6.4 查看部署结果
 
 期望看到：
 
-- ✅ 检出代码
-- ✅ 构建并推送镜像
-- ✅ 部署到生产服务器
-- ✅ 部署成功通知
-
-### 4.4 验证部署结果
-
-```bash
-# SSH 到服务器
-ssh root@115.191.33.64
-
-# 检查容器状态
-docker ps | grep starthere-web
-
-# 检查日志
-docker logs starthere-web
-
-# 本地验证访问
-curl https://star-there.com
-```
+- 后端测试通过
+- 镜像构建成功
+- 目标环境部署成功
+- smoke checks 通过
 
 ---
 
-## 🚀 后续使用
+## 🚀 当前工作流行为
 
-配置完成后，每次推送代码到 `main` 分支都会自动触发部署：
+### Production
 
-```bash
-# 修改代码后
-git add .
-git commit -m "feat: 新功能"
-git push origin main
+- 触发方式：推送到 `main`
+- 目标：`production` environment
+- 镜像标签：默认 `latest`
 
-# 自动触发：构建 → 推送镜像 → 部署
-# 约 3-5 分钟后生效
-```
+### Staging
+
+- 触发方式：手动 `workflow_dispatch`
+- 目标：`staging` environment
+- 镜像标签：默认 `staging-latest`
+
+---
+
+## 🔍 Smoke Checks
+
+当前 workflow 在远端部署后会执行最小 smoke checks：
+
+- `curl http://127.0.0.1:$SERVER_PORT/health`
+- `curl http://127.0.0.1:$WEB_PORT/`
+
+这不是完整回归测试，但可以快速发现“服务根本没起来”的问题。
 
 ---
 
 ## 🔧 常见问题排查
 
-### Q1: 部署失败 "Permission denied (publickey)"
+### Q1: `Permission denied (publickey)`
 
-**原因**：SSH 密钥未正确配置
+检查：
 
-**解决**：
+- `DEPLOY_KEY` 是否完整
+- 服务器是否已加公钥
+- 本地 SSH 是否可连通
 
-```bash
-# 1. 确认私钥内容完整（包含 BEGIN/END 行）
-cat ~/.ssh/github_actions_key
+### Q2: staging 前端打到了 production API
 
-# 2. 重新添加公钥到服务器
-ssh-copy-id -i ~/.ssh/github_actions_key.pub root@115.191.33.64
+检查：
 
-# 3. 本地测试连接
-ssh -i ~/.ssh/github_actions_key root@115.191.33.64
-```
+- `staging` environment 的 `API_BASE_URL`
+- 前端镜像是否用 staging workflow 重新构建
 
-### Q2: 镜像拉取失败 "unauthorized"
+### Q3: staging 和 production 容器冲突
 
-**原因**：镜像权限未设置或 token 过期
+检查：
 
-**解决**：
+- `WEB_CONTAINER_NAME`
+- `SERVER_CONTAINER_NAME`
+- `WEB_PORT`
+- `SERVER_PORT`
 
-- 检查镜像是否设为公开（见步骤 3）
-- 或在服务器重新登录 ghcr.io
+### Q4: staging 写进了 production 数据
 
-### Q3: 容器启动失败
+检查：
 
-**原因**：端口占用或配置错误
-
-**解决**：
-
-```bash
-# SSH 到服务器
-ssh root@115.191.33.64
-
-# 查看容器日志
-docker logs starthere-web
-
-# 检查端口占用
-netstat -tlnp | grep :80
-```
-
-### Q4: 构建超时或失败
-
-**原因**：依赖下载慢或构建错误
-
-**解决**：
-
-- 查看 Actions 日志定位具体错误
-- 本地先测试构建：`cd web && docker build -t test .`
+- `staging` environment 的数据库 secrets 是否独立
+- 后端 `FRONTEND_URL` 和数据库配置是否都来自 staging environment
 
 ---
 
-## 📖 工作流说明
+## 📝 当前已知限制
 
-### 触发条件
-
-- 推送到 `main` 分支自动触发
-- 支持手动触发（Actions → Run workflow）
-
-### 执行流程
-
-1. **构建阶段**（GitHub Actions Runner）
-   - 检出代码
-   - 设置 Docker Buildx
-   - 构建 linux/amd64 镜像
-   - 推送到 ghcr.io
-
-2. **部署阶段**（服务器）
-   - SSH 连接服务器
-   - 拉取最新镜像
-   - 停止旧容器
-   - 启动新容器
-   - 清理旧镜像
-
-### 镜像标签策略
-
-- `latest`: 最新版本（main 分支）
-- `main-<commit-sha>`: 带 commit SHA 的版本（便于回滚）
-
----
-
-## 🎯 下一步优化方向
-
-配置完成后，可以考虑：
-
-1. **添加健康检查**：部署后自动验证服务可用性
-2. **蓝绿部署**：零停机更新
-3. **回滚机制**：快速回退到上一版本
-4. **多环境支持**：区分 dev/staging/prod
-5. **通知集成**：部署成功/失败发送通知（钉钉/企业微信/邮件）
-
----
-
-_更新时间：2026-01-28_
+- 目前 CI 仍主要保护后端测试，前端 lint/test gate 还需要后续补齐
+- 后端仍在启动时执行 `AutoMigrate`，这不符合最终的受控 migration 流程
+- staging 目前是“最小可用形态”，不是完整平台化环境
