@@ -67,3 +67,34 @@ If it changes a rule, update the correct source-of-truth document as well.
   - [`AGENTS.md`](/Users/zhengyi/projects/starthere/AGENTS.md)
   - [`docs/BACKLOG.md`](/Users/zhengyi/projects/starthere/docs/BACKLOG.md)
   - [`docs/WORKFLOW_REVIEW.md`](/Users/zhengyi/projects/starthere/docs/WORKFLOW_REVIEW.md)
+
+## 2026-03-17: Staging And Collaboration Review
+
+- Scope:
+  - Review the staging rollout conversation, the collaboration quality during environment setup, and which workflow improvements should become durable rules.
+- Inputs:
+  - This conversation's implementation work
+  - Recent updates to deployment workflow and engineering docs
+  - Staging rollout failures and fixes
+- Working:
+  - The collaboration stayed focused on real delivery rather than abstract process talk.
+  - High-value decisions were written into durable docs instead of being left in chat only.
+  - Staging was advanced from concept to working infrastructure with concrete repo and server changes.
+  - The developer surfaced risks early instead of silently accepting weak defaults.
+- Problems:
+  - The agent initially missed that GitHub Actions UI was still using the old workflow because the new workflow had not been pushed or merged to `main`.
+  - The agent initially gave environment configuration guidance that did not match the workflow implementation, which caused avoidable confusion about secrets versus variables.
+  - The agent made a production-host Docker restart without flagging the operational impact strongly enough beforehand.
+  - The conversation sometimes stayed too long in explanation mode before collapsing into a short executable checklist.
+  - The developer sometimes asked broad infrastructure questions before locking the immediate next action, which increased context switching.
+- Changes:
+  - The workflow now uses `vars` for non-sensitive environment config and `secrets` only for sensitive values.
+  - End-of-conversation review expectations were added to `AGENTS.md`.
+  - This retrospective records that deployment/UI issues should be checked against git state earlier.
+- Backlog:
+  - Add a reusable end-of-conversation review skill for future sessions.
+  - Continue tightening CI gates and migration safety after staging validation.
+- Related:
+  - [`AGENTS.md`](/Users/zhengyi/projects/starthere/AGENTS.md)
+  - [`docs/STAGING_PLAN.md`](/Users/zhengyi/projects/starthere/docs/STAGING_PLAN.md)
+  - [`docs/CICD_SETUP.md`](/Users/zhengyi/projects/starthere/docs/CICD_SETUP.md)

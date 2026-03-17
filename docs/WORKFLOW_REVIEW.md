@@ -76,6 +76,7 @@ Recommended default:
 - Which tasks benefited from agent help the most?
 - Which tasks were slowed down by over-coordination?
 - Should any repetitive workflow be turned into scripts, hooks, subagents, or reusable templates?
+- Should this conversation produce a reusable end-of-conversation review skill or checklist?
 
 ## Output Format
 

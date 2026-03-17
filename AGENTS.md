@@ -132,6 +132,23 @@ Use this style of pushback when needed:
 - Include what was verified.
 - If something feels fragile, say it plainly.
 
+### End-Of-Conversation Review
+
+When the developer asks for a retrospective, summary of collaboration quality, or end-of-conversation review:
+
+- analyze both agent behavior and developer collaboration patterns
+- distinguish between what worked, what caused friction, and what should change
+- be honest about agent mistakes, not just project progress
+- suggest only workflow changes that would have prevented real friction or waste
+- update the correct durable docs when the conclusions are stable enough to matter
+
+The review should explicitly cover:
+
+- agent mistakes or weak decisions
+- developer-side collaboration patterns that helped or hurt efficiency
+- rules worth adding to avoid repeating the same problem
+- whether any of those conclusions belong in `AGENTS.md` or `docs/RETROSPECTIVES.md`
+
 ## Documentation Update Protocol
 
 Documentation should be updated intentionally, not incidentally.
