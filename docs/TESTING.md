@@ -78,6 +78,25 @@ Minimum frontend release checks:
 - `npm run test:run`
 - `npm run build`
 
+Minimum staging smoke checks:
+
+- `GET /` returns 200 from the public staging URL
+- `GET /api/v1/health` returns success from the public staging API
+- login succeeds
+- `GET /auth/me` succeeds
+- create one goal succeeds
+- delete that goal succeeds
+
+Minimum production smoke checks:
+
+- `GET /` returns 200 from the public production URL
+- `GET /api/v1/health` returns success from the public production API
+
+Smoke policy:
+
+- staging runs `basic + deep`
+- production runs `basic`
+
 ## Backend Strategy
 
 Prefer testing:

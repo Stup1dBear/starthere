@@ -56,18 +56,18 @@ deps:
 docker-build:
 	docker build -t starthere/server .
 
-# Local development with docker-compose
+# Local development with docker compose
 .PHONY: docker-up
 docker-up:
-	cd .. && docker-compose up -d
+	cd .. && docker compose up -d
 
 .PHONY: docker-down
 docker-down:
-	cd .. && docker-compose down
+	cd .. && docker compose down
 
 .PHONY: docker-logs
 docker-logs:
-	cd .. && docker-compose logs -f server
+	cd .. && docker compose logs -f server
 
 .PHONY: help
 help:
@@ -83,6 +83,6 @@ help:
 	@echo ""
 	@echo "  Docker 命令："
 	@echo "    make docker-build   - 构建 Docker 镜像"
-	@echo "    make docker-up      - 启动 docker-compose"
-	@echo "    make docker-down    - 停止 docker-compose"
+	@echo "    make docker-up      - 启动 docker compose"
+	@echo "    make docker-down    - 停止 docker compose"
 	@echo "    make docker-logs    - 查看服务日志"

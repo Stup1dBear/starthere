@@ -19,11 +19,10 @@ We optimize for:
 Based on the repository today:
 
 - production deployment is triggered by pushes to `main`
-- backend tests run in CI before deploy
-- frontend build and tests are not yet enforced in CI
-- deployment is direct-to-production with no staging gate
+- frontend lint, frontend tests, frontend build, backend vet, and backend tests run in CI before deploy
+- staging environment exists, but promotion rules are not yet enforced
 - database migrations exist, but migration execution is not yet integrated into deployment
-- backend health endpoint exists, but is not yet used as a deployment or monitoring gate
+- backend health endpoint exists and is used for minimal deploy smoke checks
 - logging, metrics, tracing, and alerting are not yet standardized
 
 This means the project can deploy, but release safety is still incomplete.
@@ -227,13 +226,12 @@ Before production rollout, confirm:
 
 ## Current Workflow Problems
 
-The current pipeline is a good start, but it has important gaps:
+The current pipeline is a good start, but it still has important gaps:
 
-- no frontend lint/test gate
-- no type-check-only gate separated from build feedback
+- no dedicated frontend type-check-only gate separated from build feedback
 - no migration execution step
-- no staging environment
-- no deployment health gate beyond container start
+- no required staging promotion rule for risky changes
+- smoke checks are still minimal
 - no explicit rollback automation
 
 ## Required CI Stages

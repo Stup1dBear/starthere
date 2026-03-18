@@ -1,0 +1,5 @@
+STAGING_DB_BASTION_HOST=your-bastion-host
+STAGING_DB_HOST=your-staging-db-host
+STAGING_DB_PORT=3306
+STAGING_DB_LOCAL_PORT=13306
+STAGING_DB_CONTROL_SOCKET=/tmp/starthere-staging-db-tunnel.sock

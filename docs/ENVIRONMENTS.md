@@ -114,6 +114,86 @@ Use `staging` before production when the change depends on deployment shape or p
 - use seed data or sanitized fixtures where possible
 - migration tests should assume realistic, imperfect data rather than only empty databases
 
+## Staging Database Access
+
+Default rule:
+
+- staging database stays private on the cloud internal network
+- do not expose the staging database directly to the public internet
+- local debugging should go through an SSH tunnel via an ECS host that already has public access and internal-network reachability
+
+Current staging database access path:
+
+- staging DB host and bastion host are local-developer configuration, not hardcoded repo constants
+- keep these values in a local, untracked config file
+- recommended local forwarded port: `13306`
+
+### Why This Is The Default
+
+- keeps the database off the public internet
+- avoids long-lived public TCP proxy exposure
+- works with local SQL clients such as DBeaver, DataGrip, or `mysql`
+- can be opened only when needed and closed immediately after debugging
+
+### Tunnel Commands
+
+From the repository root:
+
+```bash
+cp .staging-db-tunnel.example .staging-db-tunnel.local
+# edit .staging-db-tunnel.local with your real bastion/db values
+
+make open-staging-db-tunnel
+make staging-db-tunnel-status
+make close-staging-db-tunnel
+```
+
+These commands wrap [`scripts/staging_db_tunnel.sh`](/Users/zhengkexiong/Programs/starthere/scripts/staging_db_tunnel.sh).
+
+When the tunnel is open, connect your local DB client to:
+
+- host: `127.0.0.1`
+- port: `13306`
+- user/password: your staging DB credentials
+
+### Direct SSH Form
+
+If you want the raw command instead of the helper script:
+
+```bash
+ssh -N -L 13306:<staging-db-host>:3306 <bastion-host>
+```
+
+Keep that terminal open while using the tunnel. Stopping the SSH process closes the tunnel.
+
+### Tunnel Helper Overrides
+
+If you need a different local port, override it at runtime:
+
+```bash
+STAGING_DB_LOCAL_PORT=23306 make open-staging-db-tunnel
+```
+
+This is useful if `13306` is already occupied on your machine.
+
+### Local Config File
+
+Recommended local config file:
+
+- [`.staging-db-tunnel.example`](/Users/zhengkexiong/Programs/starthere/.staging-db-tunnel.example)
+- local untracked copy: `.staging-db-tunnel.local`
+
+Example local config:
+
+```bash
+STAGING_DB_BASTION_HOST=star-there-ecs-openclaw-001
+STAGING_DB_HOST=192.168.1.20
+STAGING_DB_PORT=3306
+STAGING_DB_LOCAL_PORT=13306
+```
+
+`.staging-db-tunnel.local` is gitignored and is the right place for developer-specific infrastructure coordinates.
+
 ## Mac Development And Linux Production
 
 Developing on macOS is fine for this project.

@@ -10,15 +10,132 @@
 ## 本地开发环境配置
 
 ### 前置要求
-- Docker Desktop
+- Git
 - Go 1.21+
-- Node.js 18+
+- Node.js 20+（包含 `npm`）
+- Docker Desktop（提供 `docker` 和 `docker compose`）
+- `make`（推荐，macOS 通常已自带）
+
+### 当前推荐：先做环境自检
+
+在仓库根目录运行：
+
+```bash
+make doctor
+```
+
+如果有 `[missing]`，按下面步骤补齐。
+
+### macOS 安装步骤
+
+#### 可执行 Checklist
+
+按顺序执行，做到哪一步就验证哪一步，不要一口气全装完再排错。
+
+1. 安装 Homebrew
+2. 用 Homebrew 安装 Go 和 Node.js
+3. 安装 Docker Desktop
+4. 启动 Docker Desktop 并确认 `docker compose` 可用
+5. 在仓库根目录运行 `make doctor`
+6. 初始化前端依赖：`cd web && npm ci`
+7. 初始化后端依赖：`cd server && go mod tidy`
+8. 选择一种本地启动方式：
+   - 热重载开发：`docker compose up -d mysql`，然后分别启动前后端
+   - 完整容器环境：`docker compose up -d`
+
+#### 1. 安装 Homebrew（如果还没有）
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+安装完成后执行：
+
+```bash
+echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
+eval "$(/opt/homebrew/bin/brew shellenv)"
+brew --version
+```
+
+#### 2. 安装 Go 和 Node.js
+
+```bash
+brew install go node
+```
+
+安装后验证：
+
+```bash
+go version
+node -v
+npm -v
+```
+
+#### 3. 安装 Docker Desktop
+
+推荐方式：
+
+```bash
+brew install --cask docker
+```
+
+安装后需要手动启动一次 Docker Desktop，然后验证：
+
+```bash
+docker --version
+docker compose version
+```
+
+#### 4. 验证 Git 和 make
+
+```bash
+git --version
+make --version
+```
+
+#### 5. 回到项目做初始化
+
+在仓库根目录执行：
+
+```bash
+make doctor
+```
+
+如果输出里没有 `[missing]`，继续安装项目依赖：
+
+```bash
+cd web
+npm ci
+
+cd ../server
+go mod tidy
+```
+
+#### 6. 启动本地开发环境
+
+推荐热重载方式：
+
+```bash
+docker compose up -d mysql
+
+cd server
+go run ./cmd/api/main.go
+
+cd ../web
+npm run dev
+```
+
+或者完整容器方式：
+
+```bash
+docker compose up -d
+```
 
 ### 方式一：推荐（分别启动，支持热重载）
 
 #### 1. 启动 MySQL
 ```bash
-docker-compose up -d mysql
+docker compose up -d mysql
 ```
 
 #### 2. 启动后端（新终端）
@@ -36,13 +153,13 @@ npm run dev
 ### 方式二：Docker Compose（完整环境）
 ```bash
 # 启动所有服务
-docker-compose up -d
+docker compose up -d
 
 # 查看日志
-docker-compose logs -f
+docker compose logs -f
 
 # 停止服务
-docker-compose down
+docker compose down
 ```
 
 ### 访问地址
@@ -180,16 +297,16 @@ git merge main
 ### Docker
 ```bash
 # 启动 MySQL
-docker-compose up -d mysql
+docker compose up -d mysql
 
 # 查看运行中的容器
 docker ps
 
 # 查看日志
-docker-compose logs -f
+docker compose logs -f
 
 # 停止所有服务
-docker-compose down
+docker compose down
 ```
 
 ### 后端开发
@@ -211,7 +328,7 @@ go vet ./...
 cd web
 
 # 安装依赖
-npm install
+npm ci
 
 # 启动开发服务器
 npm run dev

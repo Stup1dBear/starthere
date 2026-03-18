@@ -43,7 +43,7 @@ This file should stay understandable to both the developer and the agent in a fr
   - Why: current workflow goes from local to production directly, which is too risky for schema, auth, and deployment changes
   - Done when: staging deploy target, secrets, URL, and smoke-check flow exist
 
-- `todo` Complete CI gates before deploy
+- `done` Complete CI gates before deploy
   - Goal: require frontend lint, frontend tests, frontend build, backend tests, and backend vet before production deployment
   - Why: current CI protects backend only and leaves frontend regressions under-guarded
   - Done when: GitHub Actions blocks deploy on all required checks

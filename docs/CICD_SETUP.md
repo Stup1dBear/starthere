@@ -51,7 +51,16 @@ ssh -i ~/.ssh/github_actions_key root@115.191.33.64
 
 ## 🧾 步骤 3: 配置必需 Secrets
 
-在 `production` 和 `staging` 中都配置以下 secrets：
+在 `staging` 中配置以下 secrets：
+
+- `DEPLOY_KEY`
+- `DB_PASSWORD`
+- `JWT_SECRET`
+- `SMTP_PASS`
+- `SMOKE_TEST_EMAIL`（staging 深度 smoke test 必需）
+- `SMOKE_TEST_PASSWORD`（staging 深度 smoke test 必需）
+
+在 `production` 中配置以下 secrets：
 
 - `DEPLOY_KEY`
 - `DB_PASSWORD`
@@ -63,6 +72,8 @@ ssh -i ~/.ssh/github_actions_key root@115.191.33.64
 - `production` 和 `staging` 可以使用同一台主机，但不能共用数据库
 - `staging` 建议使用单独的 `JWT_SECRET`
 - `staging` 第一阶段建议 `EMAIL_DRIVER=log`
+- `production` 默认只跑 `basic` smoke checks，不需要 smoke 测试账号
+- `staging` 固定跑 `basic + deep` smoke checks，因此必须提供 smoke 测试账号
 
 获取私钥内容：
 
@@ -192,7 +203,8 @@ git push origin main
 
 期望看到：
 
-- 后端测试通过
+- 后端 `go vet` 和测试通过
+- 前端 `lint`、`test:run`、`build` 通过
 - 镜像构建成功
 - 目标环境部署成功
 - smoke checks 通过
@@ -206,12 +218,16 @@ git push origin main
 - 触发方式：推送到 `main`
 - 目标：`production` environment
 - 镜像标签：默认 `latest`
+- 部署前置条件：前后端校验都必须通过
+- smoke profile：`basic`
 
 ### Staging
 
 - 触发方式：手动 `workflow_dispatch`
 - 目标：`staging` environment
 - 镜像标签：默认 `staging-latest`
+- 部署前置条件：前后端校验都必须通过
+- smoke profile：`basic + deep`
 
 ---
 
@@ -222,7 +238,28 @@ git push origin main
 - `curl http://127.0.0.1:$SERVER_PORT/health`
 - `curl http://127.0.0.1:$WEB_PORT/`
 
-这不是完整回归测试，但可以快速发现“服务根本没起来”的问题。
+在 GitHub Actions runner 上还会执行公网 smoke checks：
+
+- 基础检查
+  - `WEB_URL/` 返回 200
+  - `API_BASE_URL/health` 返回 200 且 `success=true`
+- 深度检查
+  - 登录成功
+  - `GET /auth/me` 成功
+  - 创建 goal 成功
+  - 列出 goals 成功
+  - 删除刚创建的 goal 成功
+
+显式规则：
+
+- `staging` 固定运行 `basic + deep`
+- `production` 固定运行 `basic`
+- `staging` 缺少 `SMOKE_TEST_EMAIL` 或 `SMOKE_TEST_PASSWORD` 会直接失败，而不是跳过 deep
+
+这让部署验证分成两层：
+
+- 远端本机检查：确认容器起来了
+- 公网 smoke checks：确认真实入口和核心链路可用
 
 ---
 

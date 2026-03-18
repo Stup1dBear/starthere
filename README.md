@@ -47,11 +47,25 @@ starthere/
 
 ## 快速开始
 
+### 开发环境依赖
+
+- Git
+- Go 1.21+
+- Node.js 20+（包含 `npm`）
+- Docker Desktop（提供 `docker` 和 `docker compose`，用于本地 MySQL 或整套本地环境）
+- `make`（macOS 自带，推荐使用）
+
+先检查本机环境：
+
+```bash
+make doctor
+```
+
 ### 前端开发
 
 ```bash
 cd web
-npm install
+npm ci
 npm run dev
 ```
 
@@ -60,7 +74,13 @@ npm run dev
 ```bash
 cd server
 go mod tidy
-go run cmd/main.go
+go run ./cmd/api/main.go
+```
+
+### 本地完整环境
+
+```bash
+docker compose up -d
 ```
 
 ## 学习笔记

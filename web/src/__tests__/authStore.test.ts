@@ -11,20 +11,27 @@
  */
 
 import { describe, it, expect } from "vitest";
+import type { User } from "@/types/auth";
+
+type AuthState = {
+  user: User | null;
+  token: string | null;
+  isAuthenticated: boolean;
+};
 
 // 直接测试 auth store 的逻辑，不依赖 Zustand
 describe("authStore 业务逻辑", () => {
   describe("login 逻辑", () => {
     it("登录后应该设置用户、token 和认证状态", () => {
       // 模拟 store 状态
-      let state: { user: any; token: string | null; isAuthenticated: boolean } = {
+      let state: AuthState = {
         user: null,
         token: null,
         isAuthenticated: false,
       };
 
       // 模拟 login action
-      const login = (token: string, user: any) => {
+      const login = (token: string, user: User) => {
         state = {
           ...state,
           token,
@@ -52,7 +59,7 @@ describe("authStore 业务逻辑", () => {
 
   describe("logout 逻辑", () => {
     it("登出后应该清空用户、token 和认证状态", () => {
-      let state: { user: any; token: string | null; isAuthenticated: boolean } = {
+      let state: AuthState = {
         user: {
           id: "user-1",
           username: "testuser",
@@ -91,7 +98,7 @@ describe("authStore 业务逻辑", () => {
         created_at: Date.now(),
       };
 
-      let state: { user: any; token: string | null; isAuthenticated: boolean } = {
+      let state: AuthState = {
         user: testUser,
         token: "test-token",
         isAuthenticated: true,
@@ -109,13 +116,15 @@ describe("authStore 业务逻辑", () => {
         }
       };
 
-      expect(state.user.is_verified).toBe(false);
+      expect(state.user).not.toBeNull();
+      expect(state.user!.is_verified).toBe(false);
       setUserVerified();
-      expect(state.user.is_verified).toBe(true);
+      expect(state.user).not.toBeNull();
+      expect(state.user!.is_verified).toBe(true);
     });
 
     it("当没有用户时，setUserVerified 不应该报错", () => {
-      let state: { user: any; token: string | null; isAuthenticated: boolean } = {
+      let state: AuthState = {
         user: null,
         token: null,
         isAuthenticated: false,
@@ -126,7 +135,7 @@ describe("authStore 业务逻辑", () => {
           state = {
             ...state,
             user: {
-              ...(state.user as object),
+              ...state.user,
               is_verified: true,
             },
           };

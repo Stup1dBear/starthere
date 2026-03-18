@@ -38,6 +38,7 @@ help:
 	@echo "    make test-all           - 运行所有测试"
 	@echo "    make test-web-ui        - 运行前端测试 UI"
 	@echo "    make test-web-coverage  - 生成前端测试覆盖率"
+	@echo "    make smoke-staging      - 运行 staging smoke tests"
 	@echo ""
 	@echo "  构建命令："
 	@echo "    make build-web          - 构建前端 Docker 镜像"
@@ -45,6 +46,10 @@ help:
 	@echo "    make build-all          - 构建所有镜像"
 	@echo ""
 	@echo "  本地开发："
+	@echo "    make doctor             - 检查本地开发依赖"
+	@echo "    make open-staging-db-tunnel   - 打开 staging 数据库 SSH 隧道"
+	@echo "    make close-staging-db-tunnel  - 关闭 staging 数据库 SSH 隧道"
+	@echo "    make staging-db-tunnel-status - 查看 staging 数据库 SSH 隧道状态"
 	@echo "    make up                 - 启动本地开发环境"
 	@echo "    make down               - 停止本地开发环境"
 	@echo "    make logs               - 查看服务日志"
@@ -88,10 +93,32 @@ build-all: build-web build-server
 # 本地开发
 # ===============================================
 
+.PHONY: doctor
+doctor:
+	@echo "检查本地开发依赖..."
+	@command -v git >/dev/null 2>&1 && echo "  [ok] git: $$(git --version)" || echo "  [missing] git"
+	@command -v go >/dev/null 2>&1 && echo "  [ok] go: $$(go version)" || echo "  [missing] go (required for backend development)"
+	@command -v node >/dev/null 2>&1 && echo "  [ok] node: $$(node -v)" || echo "  [missing] node (required for frontend development)"
+	@command -v npm >/dev/null 2>&1 && echo "  [ok] npm: $$(npm -v)" || echo "  [missing] npm (installed with Node.js)"
+	@command -v docker >/dev/null 2>&1 && echo "  [ok] docker: $$(docker --version)" || echo "  [missing] docker (required for local database / full local stack)"
+	@docker compose version >/dev/null 2>&1 && echo "  [ok] docker compose: $$(docker compose version)" || echo "  [missing] docker compose plugin"
+
+.PHONY: open-staging-db-tunnel
+open-staging-db-tunnel:
+	@bash ./scripts/staging_db_tunnel.sh open
+
+.PHONY: close-staging-db-tunnel
+close-staging-db-tunnel:
+	@bash ./scripts/staging_db_tunnel.sh close
+
+.PHONY: staging-db-tunnel-status
+staging-db-tunnel-status:
+	@bash ./scripts/staging_db_tunnel.sh status
+
 .PHONY: up
 up:
 	@echo "启动本地开发环境..."
-	docker-compose up -d
+	docker compose up -d
 	@echo "服务已启动"
 	@echo "  前端: http://localhost"
 	@echo "  后端: http://localhost:8080"
@@ -100,12 +127,12 @@ up:
 .PHONY: down
 down:
 	@echo "停止本地开发环境..."
-	docker-compose down
+	docker compose down
 	@echo "服务已停止"
 
 .PHONY: logs
 logs:
-	docker-compose logs -f
+	docker compose logs -f
 
 .PHONY: restart
 restart: down up
@@ -175,7 +202,7 @@ deploy-web: push-web
 		docker ps | grep starthere-web;
 		echo;
 		echo "✅ 前端部署完成";
-ENDSSH
+	ENDSSH
 	@echo; echo "🌐 访问: https://star-there.com";
 
 .PHONY: deploy-server
@@ -220,7 +247,7 @@ deploy-server: push-server
 		docker ps | grep starthere-server;
 		echo;
 		echo "✅ 后端部署完成";
-ENDSSH
+	ENDSSH
 	@echo; echo "🌐 后端 API: http://$(SERVER_HOST):8080";
 
 .PHONY: deploy-all
@@ -258,6 +285,15 @@ test-web-coverage:
 	@echo "生成前端测试覆盖率..."
 	cd web && npm run test:coverage
 
+.PHONY: smoke-staging
+smoke-staging:
+	@WEB_URL=$${WEB_URL:-https://staging.star-there.com} \
+	API_BASE_URL=$${API_BASE_URL:-https://staging.star-there.com/api/v1} \
+	SMOKE_TEST_MODE=$${SMOKE_TEST_MODE:-deep} \
+	SMOKE_TEST_EMAIL=$${SMOKE_TEST_EMAIL:-} \
+	SMOKE_TEST_PASSWORD=$${SMOKE_TEST_PASSWORD:-} \
+	bash ./scripts/smoke_test.sh
+
 .PHONY: test-server
 test-server:
 	@echo "运行后端测试..."
@@ -276,4 +312,3 @@ dev-log:
 	@echo "打开开发日志..."
 	"$$EDITOR" docs/DEV_LOG.md || vim docs/DEV_LOG.md || nano docs/DEV_LOG.md || open docs/DEV_LOG.md
 	@echo "开发日志已更新，别忘了提交！"
-

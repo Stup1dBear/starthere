@@ -63,7 +63,7 @@
 
 | 层面       | 工具                    | 状态        |
 | ---------- | ----------------------- | ----------- |
-| 容器化     | Docker + docker-compose | 📝 待配置   |
+| 容器化     | Docker + docker compose | 📝 待配置   |
 | 反向代理   | Nginx                   | 📝 待配置   |
 | CI/CD      | GitHub Actions          | 📝 待配置   |
 | 服务器配置 | Shell 脚本 / Ansible    | 📝 待评估   |
@@ -77,7 +77,7 @@ starthere/
 │   ├── docker/
 │   │   ├── Dockerfile.web      # 前端镜像
 │   │   ├── Dockerfile.server   # 后端镜像
-│   │   └── docker-compose.yml  # 编排配置
+│   │   └── docker-compose.yml  # 编排配置文件
 │   ├── nginx/
 │   │   └── nginx.conf          # Nginx 配置
 │   └── scripts/

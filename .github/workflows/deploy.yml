@@ -51,7 +51,7 @@ env:
   REGISTRY: ghcr.io
 
 jobs:
-  test:
+  backend-validation:
     runs-on: ubuntu-latest
     steps:
       - name: 检出代码
@@ -73,8 +73,40 @@ jobs:
       - name: 运行后端测试
         run: cd server && go test -v ./...
 
+  frontend-validation:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref }}
+
+      - name: 设置 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: 安装前端依赖
+        run: npm ci
+
+      - name: 运行前端 lint
+        run: npm run lint
+
+      - name: 运行前端测试
+        run: npm run test:run
+
+      - name: 运行前端构建
+        run: npm run build
+
   build-and-deploy:
-    needs: test
+    needs:
+      - backend-validation
+      - frontend-validation
     runs-on: ubuntu-latest
     environment:
       name: ${{ github.event_name == 'workflow_dispatch' && inputs.environment || 'production' }}
@@ -225,6 +257,16 @@ jobs:
           echo "Web URL: ${{ steps.deploy-config.outputs.web_public_url }}"
           echo "API base URL: ${{ steps.deploy-config.outputs.api_base_url }}"
 
+      - name: 公网 smoke checks
+        if: success()
+        env:
+          WEB_URL: ${{ steps.deploy-config.outputs.web_public_url }}
+          API_BASE_URL: ${{ steps.deploy-config.outputs.api_base_url }}
+          SMOKE_TEST_MODE: ${{ steps.deploy-config.outputs.target_env == 'staging' && 'deep' || 'basic' }}
+          SMOKE_TEST_EMAIL: ${{ secrets.SMOKE_TEST_EMAIL }}
+          SMOKE_TEST_PASSWORD: ${{ secrets.SMOKE_TEST_PASSWORD }}
+        run: bash ./scripts/smoke_test.sh
+
 # GitHub environments expected:
 # - production
 # - staging
@@ -234,6 +276,8 @@ jobs:
 # - DB_PASSWORD
 # - JWT_SECRET
 # - SMTP_PASS
+# - SMOKE_TEST_EMAIL (required for staging deep smoke checks)
+# - SMOKE_TEST_PASSWORD (required for staging deep smoke checks)
 #
 # Each environment should provide these variables:
 # - DEPLOY_HOST

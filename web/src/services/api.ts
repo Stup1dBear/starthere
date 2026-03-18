@@ -1,6 +1,7 @@
 import type { ApiResponse } from "../types/auth";
 
-const API_BASE_URL = (import.meta as any).env.VITE_API_BASE_URL || "http://localhost:8080/api/v1";
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/api/v1";
 
 // Get token from zustand persist storage
 function getAuthToken(): string | null {
@@ -59,7 +60,7 @@ export class ApiClient {
     }
 
     // 确保即使后端没返回 success 字段，我们也有一个合理的默认值
-    if (typeof data.success !== 'boolean') {
+    if (typeof data.success !== "boolean") {
       data.success = response.ok;
     }
 
