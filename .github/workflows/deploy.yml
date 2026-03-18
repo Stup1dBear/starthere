@@ -3,8 +3,8 @@
 # ===============================================
 #
 # 工作流程：
-# 1. 代码推送到 main 分支触发
-# 2. 运行 Go 测试和 vet
+# 1. 手动选择 staging 或 production
+# 2. 运行前后端校验
 # 3. 构建 Docker 镜像（跨平台 linux/amd64）
 # 4. 推送镜像到 GitHub Container Registry (ghcr.io)
 # 5. SSH 到服务器，拉取新镜像并重启容器
@@ -29,9 +29,6 @@
 name: Deploy
 
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
     inputs:
       environment:
@@ -57,7 +54,7 @@ jobs:
       - name: 检出代码
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref }}
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 设置 Go
         uses: actions/setup-go@v5
@@ -82,7 +79,7 @@ jobs:
       - name: 检出代码
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref }}
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 设置 Node.js
         uses: actions/setup-node@v4
@@ -109,7 +106,7 @@ jobs:
       - frontend-validation
     runs-on: ubuntu-latest
     environment:
-      name: ${{ github.event_name == 'workflow_dispatch' && inputs.environment || 'production' }}
+      name: ${{ inputs.environment }}
     permissions:
       contents: read
       packages: write
@@ -118,7 +115,7 @@ jobs:
       - name: 检出代码
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.ref }}
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: 生成小写镜像名
         id: image-names
@@ -129,7 +126,7 @@ jobs:
       - name: 生成部署配置
         id: deploy-config
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.environment }}" = "staging" ]; then
+          if [ "${{ inputs.environment }}" = "staging" ]; then
             echo "target_env=staging" >> "$GITHUB_OUTPUT"
             echo "image_tag=${{ vars.IMAGE_TAG || 'staging-latest' }}" >> "$GITHUB_OUTPUT"
             echo "web_container_name=${{ vars.WEB_CONTAINER_NAME || 'starthere-web-staging' }}" >> "$GITHUB_OUTPUT"
@@ -292,8 +289,8 @@ jobs:
 # - DB_PASSWORD
 # - JWT_SECRET
 # - SMTP_PASS
-# - SMOKE_TEST_EMAIL (required for staging deep smoke checks)
-# - SMOKE_TEST_PASSWORD (required for staging deep smoke checks)
+# - staging only: SMOKE_TEST_EMAIL
+# - staging only: SMOKE_TEST_PASSWORD
 #
 # Each environment should provide these variables:
 # - DEPLOY_HOST

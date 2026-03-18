@@ -18,7 +18,8 @@ We optimize for:
 
 Based on the repository today:
 
-- production deployment is triggered by pushes to `main`
+- `main` pushes and pull requests trigger CI validation
+- production deployment is manual via workflow dispatch
 - frontend lint, frontend tests, frontend build, backend vet, and backend tests run in CI before deploy
 - staging environment exists, but promotion rules are not yet enforced
 - database migrations now run explicitly before backend deploy, while staging and production app containers disable `AutoMigrate`
@@ -166,9 +167,10 @@ Avoid direct destructive migrations in the same release as behavior changes when
 3. Run local validation.
 4. Open review or self-review against the checklist.
 5. Merge to `main`.
-6. CI builds, tests, packages, and deploys.
-7. Perform post-deploy verification.
-8. Monitor for regressions.
+6. CI validates on `main`.
+7. Manually deploy to `staging` or `production` as appropriate.
+8. Perform post-deploy verification.
+9. Monitor for regressions.
 
 ### Post-Deploy Verification
 

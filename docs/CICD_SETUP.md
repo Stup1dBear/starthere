@@ -1,6 +1,6 @@
 # GitHub Actions CI/CD 配置指南
 
-> 当前部署工作流支持 `production` 自动部署，以及手动触发 `staging` 或 `production` 部署。
+> 当前工作流拆分为 `CI` 和 `Deploy`：`CI` 在 push / pull request 时自动校验，`Deploy` 只支持手动触发 `staging` 或 `production` 部署。
 
 ---
 
@@ -180,22 +180,22 @@ API_BASE_URL=https://star-there.com/api/v1
 
 并且每个 environment 都配置了上面的 secrets 和 variables。
 
-### 6.2 触发 Production 部署
+### 6.2 自动触发 CI
 
-推送到 `main`：
+推送到 `main` 或创建 / 更新 Pull Request 时，会自动运行：
 
-```bash
-git add .
-git commit -m "feat: update production"
-git push origin main
-```
+- 后端 `go vet`
+- 后端测试
+- 前端 `lint`
+- 前端测试
+- 前端构建
 
-### 6.3 触发 Staging 部署
+### 6.3 手动触发部署
 
 1. 打开 **Actions**
 2. 选择 **Deploy**
 3. 点击 **Run workflow**
-4. `environment` 选 `staging`
+4. `environment` 选 `staging` 或 `production`
 5. `ref` 选要部署的分支或 commit
 6. 运行
 
@@ -214,9 +214,14 @@ git push origin main
 
 ## 🚀 当前工作流行为
 
+### CI
+
+- 触发方式：推送到 `main`，或创建 / 更新 Pull Request
+- 作用：只做前后端校验，不执行部署
+
 ### Production
 
-- 触发方式：推送到 `main`
+- 触发方式：手动 `workflow_dispatch`
 - 目标：`production` environment
 - 镜像标签：默认 `latest`
 - 部署前置条件：前后端校验都必须通过
@@ -307,6 +312,15 @@ go run ./cmd/migrate version
 ---
 
 ## 🔧 常见问题排查
+
+### Q0: 为什么 push 到 `main` 没有自动生产部署？
+
+这是当前设计：
+
+- `CI` 自动运行
+- `Deploy` 必须手动触发
+
+这样可以避免把 `main` push 直接变成生产发布。
 
 ### Q1: `Permission denied (publickey)`
 
