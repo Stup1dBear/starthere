@@ -1,16 +1,17 @@
 # Build stage
-FROM golang:1.21-alpine AS builder
+FROM golang:1.23-alpine AS builder
 
 WORKDIR /app
 
 # Install git and ca-certificates
 RUN apk add --no-cache git ca-certificates tzdata
 
-# Copy all source code first
-COPY . .
+# Download dependencies first for better layer caching
+COPY go.mod go.sum ./
+RUN go mod download
 
-# Initialize and download dependencies
-RUN go mod tidy
+# Copy all source code
+COPY . .
 
 # Build the application binaries
 RUN CGO_ENABLED=0 GOOS=linux go build -o api ./cmd/api
