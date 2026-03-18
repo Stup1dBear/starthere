@@ -98,3 +98,36 @@ If it changes a rule, update the correct source-of-truth document as well.
   - [`AGENTS.md`](/Users/zhengyi/projects/starthere/AGENTS.md)
   - [`docs/STAGING_PLAN.md`](/Users/zhengyi/projects/starthere/docs/STAGING_PLAN.md)
   - [`docs/CICD_SETUP.md`](/Users/zhengyi/projects/starthere/docs/CICD_SETUP.md)
+
+## 2026-03-18: Release Safety Closure Review
+
+- Scope:
+  - Review the work that closed the current release-safety phase: CI split, manual deploy control, explicit migrations, smoke tests, local setup hardening, and the first repository quality scan pass.
+- Inputs:
+  - Repository changes made in this conversation
+  - Current workflow and operations docs
+  - Actual staging and production baseline execution results
+  - The quality-scan findings from this conversation
+- Working:
+  - The project now has a much safer release path than before: CI is separate from deploy, staging and production deploys are explicit, and smoke checks are no longer ad hoc.
+  - Migration handling moved from implicit startup behavior toward explicit execution, which is a meaningful reliability improvement.
+  - The developer consistently surfaced operational concerns early, especially around secrets, staging safety, and database access shape.
+  - Durable docs were updated alongside implementation rather than left as chat-only knowledge.
+- Problems:
+  - The agent twice reported workflow changes as effectively pushed before verifying that `origin/main` had actually advanced, which created avoidable confusion in the GitHub Actions UI.
+  - The agent initially implemented a custom migration baseline path that did not behave consistently with `golang-migrate`'s own version handling, and this had to be corrected after real DB verification.
+  - The agent let important doc drift remain visible for too long, especially around staging flow and older environment assumptions.
+  - The developer and agent both tolerated too many workflow changes landing before one clean end-to-end verification pass, which increased debugging surface area.
+- Changes:
+  - CI and deploy are now split into separate workflows.
+  - Staging and production databases were baselined to migration version 1.
+  - CORS moved from wildcard configuration to an explicit origin allowlist.
+  - A recurring repository quality scan TODO was added to the backlog.
+- Backlog:
+  - Finish the targeted repository quality pass.
+  - Standardize production smoke tests further.
+  - Clean up stale process docs such as the remaining outdated staging plan details.
+- Related:
+  - [`docs/BACKLOG.md`](/Users/zhengyi/projects/starthere/docs/BACKLOG.md)
+  - [`docs/CICD_SETUP.md`](/Users/zhengyi/projects/starthere/docs/CICD_SETUP.md)
+  - [`docs/ENGINEERING_OPERATIONS.md`](/Users/zhengyi/projects/starthere/docs/ENGINEERING_OPERATIONS.md)

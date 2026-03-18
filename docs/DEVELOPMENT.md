@@ -165,7 +165,7 @@ docker compose down
 ### 访问地址
 | 服务 | 地址 |
 |------|------|
-| 前端 | http://localhost:5173 |
+| 前端 | http://localhost:3000 |
 | 后端 API | http://localhost:8080 |
 | 健康检查 | http://localhost:8080/health |
 

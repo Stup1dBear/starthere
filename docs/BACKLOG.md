@@ -50,7 +50,7 @@ This file should stay understandable to both the developer and the agent in a fr
 
 ### P1
 
-- `todo` Run a repository quality scan and targeted refactor pass
+- `in_progress` Run a repository quality scan and targeted refactor pass
   - Goal: identify code and workflow areas that violate the current engineering standards, then fix the highest-value issues
   - Why: the project is still small enough to clean up without major rewrite cost
   - Done when: findings are documented, prioritized, and the most important issues are fixed or scheduled
@@ -70,6 +70,11 @@ This file should stay understandable to both the developer and the agent in a fr
 - `todo` Standardize logging and health-based monitoring
   - Goal: make production failures easier to detect and diagnose
   - Done when: structured logs, health monitoring, and basic alerts are in place
+
+- `todo` Establish recurring repository quality scans
+  - Goal: run scheduled repository health checks that catch code drift, doc drift, and release-process regressions before they accumulate
+  - Why: one-off cleanup helps, but the value compounds only if the scan becomes periodic
+  - Done when: there is a lightweight cadence, a checklist, and a place to record findings and follow-up actions
 
 - `todo` Consolidate outdated docs
   - Goal: align older docs with current workflow and remove contradictory guidance

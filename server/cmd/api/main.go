@@ -26,7 +26,7 @@ func main() {
 	r := gin.Default()
 
 	// CORS middleware
-	r.Use(middleware.CORS())
+	r.Use(middleware.CORS(cfg.Server.CORSAllowedOrigins))
 
 	// Health check handler
 	healthHandler := func(c *gin.Context) {

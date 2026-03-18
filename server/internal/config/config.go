@@ -16,8 +16,9 @@ type Config struct {
 
 // ServerConfig holds server configuration
 type ServerConfig struct {
-	Port    string
-	GinMode string
+	Port               string
+	GinMode            string
+	CORSAllowedOrigins []string
 }
 
 // DatabaseConfig holds database configuration
@@ -77,10 +78,14 @@ func loadEnvFile() {
 // Load loads configuration from environment variables
 func Load() *Config {
 	loadEnvFile()
+	frontendURL := getEnv("FRONTEND_URL", "http://localhost:3000")
+	corsAllowedOrigins := getEnvAsCSV("CORS_ALLOWED_ORIGINS", []string{frontendURL})
+
 	return &Config{
 		Server: ServerConfig{
-			Port:    getEnv("SERVER_PORT", "8080"),
-			GinMode: getEnv("GIN_MODE", "debug"),
+			Port:               getEnv("SERVER_PORT", "8080"),
+			GinMode:            getEnv("GIN_MODE", "debug"),
+			CORSAllowedOrigins: corsAllowedOrigins,
 		},
 		Database: DatabaseConfig{
 			Host:        getEnv("DB_HOST", "localhost"),
@@ -102,7 +107,7 @@ func Load() *Config {
 			SMTPPort:    getEnv("SMTP_PORT", ""),
 			SMTPUser:    getEnv("SMTP_USER", ""),
 			SMTPPass:    getEnv("SMTP_PASS", ""),
-			FrontendURL: getEnv("FRONTEND_URL", "http://localhost:5173"),
+			FrontendURL: frontendURL,
 		},
 	}
 }
@@ -144,4 +149,25 @@ func getEnvAsBool(key string, defaultValue bool) bool {
 		}
 	}
 	return defaultValue
+}
+
+func getEnvAsCSV(key string, defaultValue []string) []string {
+	value, exists := os.LookupEnv(key)
+	if !exists || strings.TrimSpace(value) == "" {
+		return defaultValue
+	}
+
+	parts := strings.Split(value, ",")
+	result := make([]string, 0, len(parts))
+	for _, part := range parts {
+		trimmed := strings.TrimSpace(part)
+		if trimmed != "" {
+			result = append(result, trimmed)
+		}
+	}
+
+	if len(result) == 0 {
+		return defaultValue
+	}
+	return result
 }
