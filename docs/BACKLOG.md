@@ -60,7 +60,7 @@ This file should stay understandable to both the developer and the agent in a fr
   - Why: container startup alone is not enough release confidence
   - Done when: smoke checks are defined and automated or clearly scripted
 
-- `todo` Define database migration workflow
+- `done` Define database migration workflow
   - Goal: make schema changes safe, reviewable, and repeatable
   - Why: migrations exist but are not yet integrated into release flow
   - Done when: migration checklist, execution path, and rollback guidance are documented and used

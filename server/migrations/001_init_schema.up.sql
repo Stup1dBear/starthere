@@ -4,8 +4,13 @@ CREATE TABLE users (
     username VARCHAR(50) UNIQUE NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
+    is_verified BOOLEAN NOT NULL DEFAULT FALSE,
+    verification_token VARCHAR(255) NULL,
+    verification_sent_at BIGINT NULL,
+    verified_at BIGINT NULL,
     created_at BIGINT NOT NULL,
-    updated_at BIGINT NOT NULL
+    updated_at BIGINT NOT NULL,
+    INDEX idx_user_verification_token (verification_token)
 );
 
 -- Goals table

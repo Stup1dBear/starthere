@@ -21,7 +21,7 @@ Based on the repository today:
 - production deployment is triggered by pushes to `main`
 - frontend lint, frontend tests, frontend build, backend vet, and backend tests run in CI before deploy
 - staging environment exists, but promotion rules are not yet enforced
-- database migrations exist, but migration execution is not yet integrated into deployment
+- database migrations now run explicitly before backend deploy, while staging and production app containers disable `AutoMigrate`
 - backend health endpoint exists and is used for minimal deploy smoke checks
 - logging, metrics, tracing, and alerting are not yet standardized
 
@@ -218,9 +218,19 @@ Before production rollout, confirm:
 
 - migration tested on a representative dataset when feasible
 - long-running or locking behavior considered
-- application startup does not depend on manual hidden steps
+- application startup does not depend on hidden schema changes
 - rollback or mitigation path documented
 - monitoring exists for the affected query path
+
+### Current Migration Workflow
+
+The current project rule is:
+
+- schema changes live in SQL migration files under `server/migrations/`
+- staging and production run migrations explicitly before backend rollout
+- staging and production set `DB_AUTO_MIGRATE=false`
+- local/dev may temporarily keep `DB_AUTO_MIGRATE=true` for lower friction
+- existing databases created during the AutoMigrate era must be baselined once before relying on automated migration execution
 
 ## CI/CD Standards
 
@@ -229,7 +239,6 @@ Before production rollout, confirm:
 The current pipeline is a good start, but it still has important gaps:
 
 - no dedicated frontend type-check-only gate separated from build feedback
-- no migration execution step
 - no required staging promotion rule for risky changes
 - smoke checks are still minimal
 - no explicit rollback automation

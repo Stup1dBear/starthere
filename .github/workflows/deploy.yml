@@ -210,6 +210,21 @@ jobs:
 
             echo; echo "=== Deploying backend to ${{ steps.deploy-config.outputs.target_env }}..."
             docker pull ${{ env.REGISTRY }}/${{ steps.image-names.outputs.image_server }}:${{ steps.deploy-config.outputs.image_tag }}
+
+            echo; echo "=== Running database migrations..."
+            docker run --rm \
+              --name ${{ steps.deploy-config.outputs.server_container_name }}-migrate \
+              --entrypoint ./migrate \
+              -e DB_HOST=${{ vars.DB_HOST }} \
+              -e DB_PORT=${{ vars.DB_PORT }} \
+              -e DB_USER=${{ vars.DB_USER }} \
+              -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
+              -e DB_NAME=${{ vars.DB_NAME }} \
+              -e MIGRATIONS_DIR=/root/migrations \
+              ${{ env.REGISTRY }}/${{ steps.image-names.outputs.image_server }}:${{ steps.deploy-config.outputs.image_tag }} \
+              up
+            echo "Database migrations completed"
+
             docker stop ${{ steps.deploy-config.outputs.server_container_name }} || true
             docker rm ${{ steps.deploy-config.outputs.server_container_name }} || true
             docker run -d \
@@ -223,6 +238,7 @@ jobs:
               -e DB_USER=${{ vars.DB_USER }} \
               -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
               -e DB_NAME=${{ vars.DB_NAME }} \
+              -e DB_AUTO_MIGRATE=false \
               -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
               -e JWT_EXPIRY_HOURS=24 \
               -e EMAIL_DRIVER=${{ vars.EMAIL_DRIVER }} \

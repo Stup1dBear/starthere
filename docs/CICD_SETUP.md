@@ -206,6 +206,7 @@ git push origin main
 - 后端 `go vet` 和测试通过
 - 前端 `lint`、`test:run`、`build` 通过
 - 镜像构建成功
+- 数据库 migrations 执行成功
 - 目标环境部署成功
 - smoke checks 通过
 
@@ -220,6 +221,7 @@ git push origin main
 - 镜像标签：默认 `latest`
 - 部署前置条件：前后端校验都必须通过
 - smoke profile：`basic`
+- 数据库策略：deploy 前显式执行 migrations，应用容器禁用 `AutoMigrate`
 
 ### Staging
 
@@ -228,6 +230,7 @@ git push origin main
 - 镜像标签：默认 `staging-latest`
 - 部署前置条件：前后端校验都必须通过
 - smoke profile：`basic + deep`
+- 数据库策略：deploy 前显式执行 migrations，应用容器禁用 `AutoMigrate`
 
 ---
 
@@ -255,6 +258,46 @@ git push origin main
 - `staging` 固定运行 `basic + deep`
 - `production` 固定运行 `basic`
 - `staging` 缺少 `SMOKE_TEST_EMAIL` 或 `SMOKE_TEST_PASSWORD` 会直接失败，而不是跳过 deep
+
+## 🗃 数据库迁移流程
+
+当前仓库使用显式 migration workflow：
+
+- migration 文件位于 `server/migrations/`
+- 通过 `go run ./cmd/migrate ...` 或 `server/Makefile` 中的 migration 命令执行
+- staging / production deploy 前会先运行 migration，再启动后端容器
+- staging / production 后端容器设置 `DB_AUTO_MIGRATE=false`
+- local/dev 默认仍可使用 `DB_AUTO_MIGRATE=true` 降低开发摩擦
+
+### 一次性基线步骤（现有 staging / production 必做）
+
+因为历史环境之前依赖 `AutoMigrate()`，不是从 `schema_migrations` 起步，所以第一次切换到显式 migration 前，必须先建立基线。
+
+在确认现有数据库结构已经覆盖 `001_init_schema.up.sql` 之后，执行：
+
+```bash
+cd server
+DB_HOST=127.0.0.1 \
+DB_PORT=13306 \
+DB_USER=<db_user> \
+DB_PASSWORD=<db_password> \
+DB_NAME=<db_name> \
+go run ./cmd/migrate baseline 1
+```
+
+验证：
+
+```bash
+cd server
+DB_HOST=127.0.0.1 \
+DB_PORT=13306 \
+DB_USER=<db_user> \
+DB_PASSWORD=<db_password> \
+DB_NAME=<db_name> \
+go run ./cmd/migrate version
+```
+
+只有 baseline 完成后，后续 deploy 中的自动 migration 才会正常工作。
 
 这让部署验证分成两层：
 

@@ -37,6 +37,24 @@ test-coverage:
 vet:
 	$(GOCMD) vet ./...
 
+# Run database migrations
+.PHONY: migrate-up
+migrate-up:
+	$(GOCMD) run ./cmd/migrate up
+
+.PHONY: migrate-down
+migrate-down:
+	$(GOCMD) run ./cmd/migrate down
+
+.PHONY: migrate-version
+migrate-version:
+	$(GOCMD) run ./cmd/migrate version
+
+.PHONY: migrate-baseline
+migrate-baseline:
+	@test -n "$(VERSION)" || (echo "usage: make migrate-baseline VERSION=<n>" && exit 1)
+	$(GOCMD) run ./cmd/migrate baseline $(VERSION)
+
 # Clean build artifacts
 .PHONY: clean
 clean:
@@ -80,6 +98,10 @@ help:
 	@echo "    make vet            - 运行 go vet"
 	@echo "    make deps           - 下载依赖"
 	@echo "    make clean          - 清理构建文件"
+	@echo "    make migrate-up     - 执行所有未应用的 migration"
+	@echo "    make migrate-down   - 回滚一个 migration"
+	@echo "    make migrate-version - 查看当前 migration 版本"
+	@echo "    make migrate-baseline VERSION=<n> - 为现有数据库建立 migration 基线"
 	@echo ""
 	@echo "  Docker 命令："
 	@echo "    make docker-build   - 构建 Docker 镜像"

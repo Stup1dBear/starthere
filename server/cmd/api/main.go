@@ -44,9 +44,12 @@ func main() {
 		log.Fatalf("Failed to connect to database: %v", err)
 	}
 
-	// Auto migrate database
-	if err := database.AutoMigrate(); err != nil {
-		log.Fatalf("Failed to migrate database: %v", err)
+	// Keep AutoMigrate only for local/dev convenience.
+	// Staging and production should use explicit migration commands.
+	if cfg.Database.AutoMigrate {
+		if err := database.AutoMigrate(); err != nil {
+			log.Fatalf("Failed to auto-migrate database: %v", err)
+		}
 	}
 
 	// Initialize JWT manager

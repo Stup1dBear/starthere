@@ -22,11 +22,12 @@ type ServerConfig struct {
 
 // DatabaseConfig holds database configuration
 type DatabaseConfig struct {
-	Host     string
-	Port     string
-	User     string
-	Password string
-	Name     string
+	Host        string
+	Port        string
+	User        string
+	Password    string
+	Name        string
+	AutoMigrate bool
 }
 
 // JWTConfig holds JWT configuration
@@ -82,11 +83,12 @@ func Load() *Config {
 			GinMode: getEnv("GIN_MODE", "debug"),
 		},
 		Database: DatabaseConfig{
-			Host:     getEnv("DB_HOST", "localhost"),
-			Port:     getEnv("DB_PORT", "3306"),
-			User:     getEnv("DB_USER", "starthere"),
-			Password: getEnv("DB_PASSWORD", ""),
-			Name:     getEnv("DB_NAME", "starthere"),
+			Host:        getEnv("DB_HOST", "localhost"),
+			Port:        getEnv("DB_PORT", "3306"),
+			User:        getEnv("DB_USER", "starthere"),
+			Password:    getEnv("DB_PASSWORD", ""),
+			Name:        getEnv("DB_NAME", "starthere"),
+			AutoMigrate: getEnvAsBool("DB_AUTO_MIGRATE", true),
 		},
 		JWT: JWTConfig{
 			SecretKey:   getEnv("JWT_SECRET", "your-super-secret-jwt-key-change-this-in-production"),
@@ -127,6 +129,18 @@ func getEnvAsInt(key string, defaultValue int) int {
 		}
 		if result > 0 {
 			return result
+		}
+	}
+	return defaultValue
+}
+
+func getEnvAsBool(key string, defaultValue bool) bool {
+	if value, exists := os.LookupEnv(key); exists {
+		switch strings.ToLower(strings.TrimSpace(value)) {
+		case "1", "true", "yes", "on":
+			return true
+		case "0", "false", "no", "off":
+			return false
 		}
 	}
 	return defaultValue
