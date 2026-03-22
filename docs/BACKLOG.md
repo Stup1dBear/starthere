@@ -55,6 +55,11 @@ This file should stay understandable to both the developer and the agent in a fr
   - Why: the product now has a stronger vision, but assistant responsibilities, check-in structure, and homepage shape are still unresolved
   - Done when: the assistant role, daily check-in flow, lightweight social entry point, and MVP information architecture are explicitly defined
 
+- `todo` Define assistant persona and first check-in flows
+  - Goal: turn the accepted assistant direction into concrete prompts, states, and interaction patterns
+  - Why: assistant usefulness now depends on consistent behavior for stuck, drifted, and low-pressure return scenarios
+  - Done when: the assistant tone, honesty boundary, greeting style, and first check-in flows for key states are documented and ready to implement
+
 - `in_progress` Run a repository quality scan and targeted refactor pass
   - Goal: identify code and workflow areas that violate the current engineering standards, then fix the highest-value issues
   - Why: the project is still small enough to clean up without major rewrite cost

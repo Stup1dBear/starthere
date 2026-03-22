@@ -115,3 +115,24 @@ If something is still undecided, keep it in [`docs/BACKLOG.md`](/Users/zhengyi/p
 - Related:
   - [`docs/PRODUCT_STRATEGY.md`](/Users/zhengyi/projects/starthere/docs/PRODUCT_STRATEGY.md)
   - [`docs/BACKLOG.md`](/Users/zhengyi/projects/starthere/docs/BACKLOG.md)
+
+## 2026-03-23: Assistant Starts As A Calm Progress Companion
+
+- Status: accepted
+- Context:
+  - Product discussion clarified that the assistant is central to the MVP, but trying to make it a deep co-creator too early would require more context than the first version can reliably hold.
+  - The most important user failure modes are getting stuck and drifting away from meaningful long-term projects.
+- Decision:
+  - The assistant should prioritize `progress > witnessing > encouragement > co-creation`.
+  - The first version should focus on identifying blockers, helping users restart after drift, and suggesting realistic next steps only when needed.
+  - The assistant should remain honest that it is an AI, avoid pretending to share human feelings, and use a warm, calm, lightly playful tone.
+- Why:
+  - This keeps the product useful and trustworthy without overpromising emotional or strategic depth.
+  - It matches the founder's intent to build a companion that helps people continue difficult pursuits rather than a generic powerful agent.
+- Consequences:
+  - Early assistant UX should optimize for natural check-ins, blocker diagnosis, and low-pressure re-entry.
+  - Advice should be selective and preferably grounded in examples, patterns, or concrete context instead of generic planning output.
+  - Deeper co-creation can be a later evolution after richer project memory exists.
+- Related:
+  - [`docs/PRODUCT_STRATEGY.md`](/Users/zhengyi/projects/starthere/docs/PRODUCT_STRATEGY.md)
+  - [`docs/BACKLOG.md`](/Users/zhengyi/projects/starthere/docs/BACKLOG.md)
