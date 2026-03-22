@@ -2,6 +2,100 @@
 
 > Durable source of truth for product vision, target user, core experience principles, and MVP direction.
 
+## Product Constitution
+
+Use this section as the fast-start version of the product strategy.
+If a future discussion conflicts with this section, update this section deliberately instead of relying on chat memory.
+
+### One-Sentence Definition
+
+StartHere is a star-themed exploration companion that helps people keep pursuing meaningful long-term personal projects without feeling lost, forgotten, or alone.
+
+### Core Promise
+
+The product should help users:
+
+- remember the stars they truly want to chase
+- return after drift or discouragement
+- see that effort still matters before success is certain
+- feel quietly accompanied rather than managed
+
+### Primary User
+
+The first deep user is the founder themself:
+
+- someone with real long-term ambitions
+- someone who easily loses continuity
+- someone who wants to be gently reconnected to meaningful work
+
+The first version should optimize for long-term personal projects, not habits, chores, or generic productivity.
+
+### Assistant Contract
+
+The assistant should be:
+
+- an AI that knows it is an AI
+- warm, natural, calm, and lightly playful
+- focused on helping the user keep moving
+- able to witness, remember, and gently encourage
+
+The assistant should not be:
+
+- a fake human friend
+- a pressure-heavy coach
+- a maximalist autonomous agent
+- a system that rushes into advice before understanding the blocker
+
+### Social Contract
+
+Social design should begin as quiet fellow-traveler signals:
+
+- users can sense that other people are chasing similar stars
+- users can encounter small, intentionally shared exploration fragments
+- feedback should stay lightweight
+
+The product should avoid becoming a noisy public feed or obligation-heavy community in its first version.
+
+### Core Loops
+
+New-user loop:
+
+- create a star
+- talk with the assistant
+- find the first step
+- return later
+
+Daily loop:
+
+- return to the current star
+- make a short exploration update
+- receive a calm response and a clearer next step
+- see a small change in the star map
+
+### Home View
+
+The home screen should show:
+
+- the current star as the main visual subject
+- the user's broader star map as surrounding context
+- a larger outer sky that hints at other people's distant exploration
+
+The intended feeling is:
+
+- I know what I should reconnect with now
+- I still belong to a larger personal universe
+- I am not exploring in a vacuum
+
+### Non-Negotiable Boundaries
+
+Do not let the product collapse into:
+
+- a reskinned todo list
+- a pressure-heavy habit tracker
+- empty badge collection
+- fake emotional intimacy from the assistant
+- a social feed before the core product loop is strong
+
 ## Current Product Definition
 
 StartHere is not primarily a goal list or habit tracker.
