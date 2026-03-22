@@ -95,3 +95,23 @@ If something is still undecided, keep it in [`docs/BACKLOG.md`](/Users/zhengyi/p
 - Related:
   - [`docs/ENVIRONMENTS.md`](/Users/zhengyi/projects/starthere/docs/ENVIRONMENTS.md)
   - [`docs/BACKLOG.md`](/Users/zhengyi/projects/starthere/docs/BACKLOG.md)
+
+## 2026-03-23: Product Direction Focuses On Exploration Companionship
+
+- Status: accepted
+- Context:
+  - The previous framing of StartHere centered on goals and completion, but it did not yet define a compelling daily loop.
+  - Product discussion clarified that the strongest motivation is not generic productivity, but helping people keep pursuing meaningful long-term ambitions without feeling lost or alone.
+- Decision:
+  - StartHere should be positioned as a star-themed exploration companion for long-term personal projects.
+  - The first deep user is the developer themself.
+  - The first version should prioritize an assistant-led daily check-in loop and defer heavy social/community features.
+- Why:
+  - This direction better matches the founder's actual motivation, avoids collapsing into a generic todo or habit product, and creates a clearer path to a differentiated MVP.
+- Consequences:
+  - Product decisions should optimize for continuity, companionship, and visible progress through the process, not only completion.
+  - The assistant should be designed as a witness and navigator rather than a maximalist autonomous agent.
+  - Early social work should focus on lightweight fellow-traveler signals instead of a full public community.
+- Related:
+  - [`docs/PRODUCT_STRATEGY.md`](/Users/zhengyi/projects/starthere/docs/PRODUCT_STRATEGY.md)
+  - [`docs/BACKLOG.md`](/Users/zhengyi/projects/starthere/docs/BACKLOG.md)

@@ -50,6 +50,11 @@ This file should stay understandable to both the developer and the agent in a fr
 
 ### P1
 
+- `todo` Define the assistant-first MVP loop
+  - Goal: turn the new product direction into a concrete, buildable interaction loop
+  - Why: the product now has a stronger vision, but assistant responsibilities, check-in structure, and homepage shape are still unresolved
+  - Done when: the assistant role, daily check-in flow, lightweight social entry point, and MVP information architecture are explicitly defined
+
 - `in_progress` Run a repository quality scan and targeted refactor pass
   - Goal: identify code and workflow areas that violate the current engineering standards, then fix the highest-value issues
   - Why: the project is still small enough to clean up without major rewrite cost

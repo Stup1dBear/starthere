@@ -163,6 +163,8 @@ Use one primary document per concern:
   - active engineering TODOs and priorities
 - `docs/DECISIONS.md`
   - accepted engineering and workflow decisions
+- `docs/PRODUCT_STRATEGY.md`
+  - product vision, target users, experience principles, and MVP direction
 - `docs/ENGINEERING_OPERATIONS.md`
   - branch strategy, release rules, CI/CD, observability, operational standards
 - `docs/TESTING.md`
@@ -193,6 +195,7 @@ Use these defaults:
 - collaboration behavior changed -> update `AGENTS.md`
 - active work priorities changed -> update `docs/BACKLOG.md`
 - accepted rule or engineering decision changed -> update `docs/DECISIONS.md`
+- product direction, target user, core loop, or MVP shape changed -> update `docs/PRODUCT_STRATEGY.md`
 - release, branch, deploy, monitoring, or migration process changed -> update `docs/ENGINEERING_OPERATIONS.md`
 - test strategy or validation standard changed -> update `docs/TESTING.md`
 - local, staging, or production responsibilities changed -> update `docs/ENVIRONMENTS.md`
