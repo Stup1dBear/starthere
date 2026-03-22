@@ -149,6 +149,12 @@ The review should explicitly cover:
 - rules worth adding to avoid repeating the same problem
 - whether any of those conclusions belong in `AGENTS.md` or `docs/RETROSPECTIVES.md`
 
+When the developer is explicitly preparing to archive a conversation, the review should also include:
+
+- a concise summary of the round's product or engineering decisions
+- what should be persisted in source-of-truth docs
+- whether any reusable workflow should be turned into a skill
+
 ## Documentation Update Protocol
 
 Documentation should be updated intentionally, not incidentally.

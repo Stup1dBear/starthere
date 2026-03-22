@@ -131,3 +131,33 @@ If it changes a rule, update the correct source-of-truth document as well.
   - [`docs/BACKLOG.md`](/Users/zhengyi/projects/starthere/docs/BACKLOG.md)
   - [`docs/CICD_SETUP.md`](/Users/zhengyi/projects/starthere/docs/CICD_SETUP.md)
   - [`docs/ENGINEERING_OPERATIONS.md`](/Users/zhengyi/projects/starthere/docs/ENGINEERING_OPERATIONS.md)
+
+## 2026-03-23: Product Direction And Archive Workflow Review
+
+- Scope:
+  - Review the multi-round product strategy discussion, the collaboration pattern used to converge on the product direction, and whether archive-time summarization should become a reusable workflow.
+- Inputs:
+  - This conversation's product discussion
+  - Recent updates to [`docs/PRODUCT_STRATEGY.md`](/Users/zhengyi/projects/starthere/docs/PRODUCT_STRATEGY.md), [`docs/DECISIONS.md`](/Users/zhengyi/projects/starthere/docs/DECISIONS.md), and [`docs/LEARNING_QUEUE.md`](/Users/zhengyi/projects/starthere/docs/LEARNING_QUEUE.md)
+  - The repeated pattern of pausing to record, commit, and push stable conclusions during the session
+- Working:
+  - The collaboration converged on a more differentiated product direction instead of drifting into generic goal-tracker ideas.
+  - The developer repeatedly asked to persist stable conclusions, which prevented product thinking from getting lost in chat-only context.
+  - Breaking the conversation into rounds created useful structure without forcing premature implementation.
+  - The product strategy now has both a detailed history and a compact constitution, which should reduce future re-onboarding cost.
+- Problems:
+  - The agent initially offered some assistant prompt examples that felt too tool-like and insufficiently natural for the intended product tone.
+  - The agent sometimes asked structured product questions faster than the emotional tone of the product had been fully captured, which risked making the discussion feel more mechanical than it should have.
+  - The collaboration still relied on the developer remembering to ask for archive-time synthesis; that pattern was not yet encoded as a reusable skill.
+- Changes:
+  - Product direction was recorded in durable docs as a star-themed exploration companion for long-term personal projects.
+  - A compact product constitution was added to the product strategy document.
+  - Archive-time review expectations were made more explicit in [`AGENTS.md`](/Users/zhengyi/projects/starthere/AGENTS.md).
+  - A reusable skill should now exist for archive-time session synthesis and retro capture.
+- Backlog:
+  - Use the new archive-oriented skill in future end-of-round summaries and refine it with real usage.
+  - Continue tightening the boundary between accepted product direction and inspiration/reference material when future strategy discussions occur.
+- Related:
+  - [`AGENTS.md`](/Users/zhengyi/projects/starthere/AGENTS.md)
+  - [`docs/PRODUCT_STRATEGY.md`](/Users/zhengyi/projects/starthere/docs/PRODUCT_STRATEGY.md)
+  - [`docs/RETROSPECTIVES.md`](/Users/zhengyi/projects/starthere/docs/RETROSPECTIVES.md)
