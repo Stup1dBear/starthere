@@ -233,6 +233,33 @@ Preferred early social characteristics:
 
 Avoid early heavy social features that depend on high volume or public performance.
 
+## Round 3 Decisions
+
+These decisions are currently accepted unless replaced by later discussion.
+
+### Lightweight Social Priority
+
+The first social layer should prioritize:
+
+1. helping users sense that other people are also chasing similar stars
+2. letting users see small exploration fragments from others
+
+The first version should not prioritize:
+
+- explicit help-seeking flows
+- obligation-heavy interaction
+- public community dynamics
+
+### Exploration Fragments
+
+User exploration logs should remain private by default.
+
+If social sharing exists, it should begin as short, intentionally shared fragments rather than exposing the full private journey.
+These fragments may support very light feedback such as likes or simple acknowledgements.
+
+The goal is not conversation first.
+The goal is to let users feel seen and to sense other travelers in the same sky.
+
 ## MVP Direction
 
 The current likely MVP shape is:
@@ -243,10 +270,82 @@ The current likely MVP shape is:
 - the product reflects progress, setbacks, pauses, and returns
 - the assistant helps the user recover a next step instead of merely congratulating or sympathizing
 
+## Round 4 Decisions
+
+These decisions are currently accepted unless replaced by later discussion.
+
+### Onboarding Loop
+
+The new-user loop should be:
+
+- create a star
+- talk with the assistant
+- find the first step
+- return later to update the exploration
+
+This is important, but it is not the main daily loop.
+
+### Daily Loop
+
+The primary daily loop should be:
+
+- return to the current star
+- make a short exploration update
+- receive a calm assistant response
+- see the star map change slightly
+- leave with a clearer sense of the next step
+
+Social input should remain ambient rather than replacing this core loop.
+
+## Round 5 Decisions
+
+These decisions are currently accepted unless replaced by later discussion.
+
+### Default Home View
+
+The home screen should not be a flat list and should not isolate the user into a single full-screen star.
+
+Instead, the default view should:
+
+- show the user's star map as the surrounding context
+- place the current star as the main visual subject
+- keep other personal stars visible at lower emphasis
+
+This preserves both focus and a sense of a larger personal universe.
+
+### Zoom Structure
+
+The product should support a sense of scale:
+
+- near view: the current star and its recent activity
+- mid view: the user's broader star map
+- far view: a larger star field or nebula that hints at other people's exploration
+
+This outer layer should feel like distant signals, not a feed.
+
+### Social Atmosphere
+
+Other users' shared fragments should feel like quiet echoes from the larger sky.
+
+They should appear as sparse, low-pressure signals rather than a noisy timeline.
+The intended feeling is:
+
+- I am focused on my own star
+- but I am not exploring in a vacuum
+
+## Experience References
+
+The product should take inspiration from works that emphasize:
+
+- awe without grandiosity
+- loneliness without hopelessness
+- warmth without forced intimacy
+- exploration as meaning-making rather than checklist completion
+
+Outer Wilds is a useful reference for atmosphere, scale, and gentle mystery, but not for puzzle structure or time-loop mechanics.
+
 ## Open Questions
 
 These are intentionally unresolved and should be decided in later rounds:
 
-- the first lightweight social mechanic
-- the MVP home page information architecture
 - how exploration logs become visible progress without feeling like admin work

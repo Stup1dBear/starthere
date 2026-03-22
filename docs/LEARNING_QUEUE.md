@@ -125,3 +125,27 @@ If an item becomes immediate work, move it into [`docs/BACKLOG.md`](/Users/zheng
   - Internal workflow decision
 - Notes:
   - Review this file briefly during each workflow retrospective and either promote, defer, or drop items.
+
+## Product Atmosphere References
+
+- Status: inbox
+- Why it matters:
+  - StartHere now has a clearer emotional direction, and the next design work should be informed by works that already do quiet exploration, gentle companionship, and cosmic scale well.
+- Revisit when:
+  - Before major homepage, visual identity, assistant tone, sound, or social-presence design work.
+- Trigger:
+  - Need stronger inspiration for product mood, social subtlety, or the feeling of a larger sky beyond the user's own progress.
+- Source:
+  - Games: Outer Wilds, Journey, Sky: Children of the Light, In Other Waters, Heaven's Vault, Kind Words, A Short Hike, Citizen Sleeper
+  - Literature: The Little Prince, Solaris, Stories of Your Life and Others, The Left Hand of Darkness
+  - Film: Arrival, Interstellar, Her, Universe Exploration Editorial Department, Night on the Galactic Railroad
+  - Music: Outer Wilds OST, Brian Eno - Apollo, C418 - Minecraft Volume Alpha/Beta, Max Richter, Olafur Arnalds, Nils Frahm, quieter Joe Hisaishi works
+  - Visual art: The Starry Night, Caspar David Friedrich landscapes, Monet atmospheric works, Hilma af Klint
+- Notes:
+  - Use these as inspiration for tone and structure, not as assets to imitate directly.
+  - Strongest current references for product feeling:
+    - Outer Wilds for awe, quiet scale, and distant signals
+    - Journey for light companionship
+    - Kind Words for low-pressure social acknowledgement
+    - In Other Waters for an honest AI companion
+    - The Little Prince for the emotional meaning of stars
