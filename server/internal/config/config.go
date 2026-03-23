@@ -114,7 +114,7 @@ func Load() *Config {
 
 // DSN returns the MySQL data source name
 func (c *DatabaseConfig) DSN() string {
-	return c.User + ":" + c.Password + "@tcp(" + c.Host + ":" + c.Port + ")/" + c.Name + "?charset=utf8mb4&parseTime=True&loc=Local"
+	return c.User + ":" + c.Password + "@tcp(" + c.Host + ":" + c.Port + ")/" + c.Name + "?charset=utf8mb4&parseTime=True&loc=Local&multiStatements=true"
 }
 
 func getEnv(key, defaultValue string) string {

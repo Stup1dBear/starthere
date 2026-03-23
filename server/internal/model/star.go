@@ -14,7 +14,7 @@ type StarCheckIn struct {
 	StarID         string         `json:"starId" gorm:"column:star_id;type:varchar(36);index;not null"`
 	CreatedAt      int64          `json:"createdAt" gorm:"column:created_at;autoCreateTime:milli"`
 	Mood           string         `json:"mood" gorm:"type:varchar(20);not null"`
-	Signal         string         `json:"signal" gorm:"type:varchar(20);not null"`
+	Signal         string         `json:"signal" gorm:"column:check_in_signal;type:varchar(20);not null"`
 	Update         string         `json:"update" gorm:"column:update_text;type:text;not null"`
 	Blocker        string         `json:"blocker" gorm:"type:text"`
 	NextStep       string         `json:"nextStep" gorm:"column:next_step;type:text;not null"`

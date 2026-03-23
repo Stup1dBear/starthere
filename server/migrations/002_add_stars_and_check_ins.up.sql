@@ -23,7 +23,7 @@ CREATE TABLE star_check_ins (
     star_id VARCHAR(36) NOT NULL,
     created_at BIGINT NOT NULL,
     mood VARCHAR(20) NOT NULL,
-    signal VARCHAR(20) NOT NULL,
+    check_in_signal VARCHAR(20) NOT NULL,
     update_text TEXT NOT NULL,
     blocker TEXT NULL,
     next_step TEXT NOT NULL,
