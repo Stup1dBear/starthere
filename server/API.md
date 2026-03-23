@@ -53,6 +53,8 @@ Authorization: Bearer <token>
 
 ### Goals (Protected)
 
+Legacy CRUD endpoints remain available during migration, but the new MVP homepage now uses the star/check-in APIs below.
+
 #### Get all goals
 ```http
 GET /api/v1/goals
@@ -141,6 +143,50 @@ Authorization: Bearer <token>
 DELETE /api/v1/goals/:goalId/milestones/:milestoneId
 Authorization: Bearer <token>
 ```
+
+---
+
+### Stars (Protected)
+
+#### Get all stars
+```http
+GET /api/v1/stars
+Authorization: Bearer <token>
+```
+
+#### Create a star
+```http
+POST /api/v1/stars
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "title": "Ship StartHere MVP",
+  "vision": "Make the homepage feel like a place to return to",
+  "whyItMatters": "This product should help meaningful projects survive drift",
+  "currentState": "The single-user assistant loop is defined and ready to persist"
+}
+```
+
+#### Create a check-in for a star
+```http
+POST /api/v1/stars/:starId/check-ins
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "mood": "hopeful",
+  "signal": "returning",
+  "update": "I came back to this project today and want to reconnect to the core loop",
+  "blocker": "The homepage still needs a tighter backend-backed data flow"
+}
+```
+
+The star response now includes:
+
+- current star snapshot fields such as `currentState`, `momentum`, `energy`, and `nextStep`
+- a `checkIns` array ordered newest first
+- each check-in's stored `companionReply`
 
 ---
 

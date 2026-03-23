@@ -40,18 +40,20 @@ export function CreateStarDialog({ open, onClose }: CreateStarDialogProps) {
     onClose();
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (isDisabled) {
       return;
     }
 
-    createStar({
+    const created = await createStar({
       title,
       vision,
       whyItMatters,
       currentState,
     });
-    handleClose();
+    if (created) {
+      handleClose();
+    }
   };
 
   return (
@@ -110,7 +112,7 @@ export function CreateStarDialog({ open, onClose }: CreateStarDialogProps) {
         <Button onClick={handleClose} color="inherit">
           先放一放
         </Button>
-        <Button variant="contained" onClick={handleSubmit} disabled={isDisabled}>
+        <Button variant="contained" onClick={() => void handleSubmit()} disabled={isDisabled}>
           升起这颗星
         </Button>
       </DialogActions>

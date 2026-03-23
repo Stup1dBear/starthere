@@ -60,10 +60,15 @@ This file should stay understandable to both the developer and the agent in a fr
   - Why: assistant usefulness now depends on consistent behavior for stuck, drifted, and low-pressure return scenarios
   - Done when: the assistant tone, honesty boundary, greeting style, and first check-in flows for key states are documented and ready to implement
 
-- `todo` Persist star and check-in data in the backend
+- `done` Persist star and check-in data in the backend
   - Goal: move the new MVP domain model off frontend-only local persistence
   - Why: the assistant-first loop now exists in product form, but it is not yet durable across devices or environments
   - Done when: star, check-in, and assistant-reply data have backend APIs and migrations
+
+- `todo` Add authenticated star/check-in smoke coverage
+  - Goal: verify the new assistant-first MVP path after deploy
+  - Why: current smoke expectations were updated, but the scripted path still needs to exercise the new backend-backed homepage flow
+  - Done when: smoke checks cover login, fetching stars, creating a star, and submitting a check-in
 
 - `todo` Replace deterministic companion replies with real LLM-backed responses
   - Goal: upgrade the current assistant simulator into a production-ready model integration
@@ -111,7 +116,7 @@ Recommended next sequence:
 
 1. Build staging environment.
 2. Add smoke test path.
-3. Persist star and check-in data in the backend.
+3. Add authenticated star/check-in smoke coverage.
 4. Replace deterministic companion replies with real model integration.
 
 ## Execution Phases

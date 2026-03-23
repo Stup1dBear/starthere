@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS star_check_ins;
+DROP TABLE IF EXISTS stars;

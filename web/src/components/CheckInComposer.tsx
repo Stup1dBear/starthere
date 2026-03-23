@@ -41,22 +41,24 @@ export function CheckInComposer({ star }: CheckInComposerProps) {
 
   const isDisabled = useMemo(() => !update.trim(), [update]);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (isDisabled) {
       return;
     }
 
-    submitCheckIn({
+    const submitted = await submitCheckIn({
       starId: star.id,
       mood,
       signal,
       update,
       blocker,
     });
-    setUpdate("");
-    setBlocker("");
-    setSignal("progress");
-    setMood("clear");
+    if (submitted) {
+      setUpdate("");
+      setBlocker("");
+      setSignal("progress");
+      setMood("clear");
+    }
   };
 
   return (
@@ -124,7 +126,12 @@ export function CheckInComposer({ star }: CheckInComposerProps) {
             fullWidth
           />
 
-          <Button variant="contained" size="large" onClick={handleSubmit} disabled={isDisabled}>
+          <Button
+            variant="contained"
+            size="large"
+            onClick={() => void handleSubmit()}
+            disabled={isDisabled}
+          >
             记录这次探索
           </Button>
         </Stack>

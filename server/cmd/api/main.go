@@ -74,16 +74,19 @@ func main() {
 	userRepo := repository.NewUserRepository(database.DB)
 	goalRepo := repository.NewGoalRepository(database.DB)
 	milestoneRepo := repository.NewMilestoneRepository(database.DB)
+	starRepo := repository.NewStarRepository(database.DB)
 
 	// Initialize services
 	authService := service.NewAuthService(userRepo, jwtManager, emailer, &cfg.Email)
 	goalService := service.NewGoalService(goalRepo)
 	milestoneService := service.NewMilestoneService(milestoneRepo, goalRepo)
+	starService := service.NewStarService(starRepo)
 
 	// Initialize handlers
 	authHandler := handler.NewAuthHandler(authService)
 	goalHandler := handler.NewGoalHandler(goalService)
 	milestoneHandler := handler.NewMilestoneHandler(milestoneService)
+	starHandler := handler.NewStarHandler(starService)
 
 	// Initialize middleware
 	authMiddleware := middleware.NewAuthMiddleware(jwtManager)
@@ -129,6 +132,14 @@ func main() {
 					milestones.DELETE("/:milestoneId", milestoneHandler.DeleteMilestone)
 					milestones.PATCH("/:milestoneId/toggle", milestoneHandler.ToggleMilestone)
 				}
+			}
+
+			// Stars
+			stars := protected.Group("/stars")
+			{
+				stars.GET("", starHandler.ListStars)
+				stars.POST("", starHandler.CreateStar)
+				stars.POST("/:starId/check-ins", starHandler.CreateCheckIn)
 			}
 		}
 	}

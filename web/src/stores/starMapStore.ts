@@ -1,153 +1,100 @@
 import { create } from "zustand";
-import { createJSONStorage, persist, type StateStorage } from "zustand/middleware";
 import type { CreateCheckInInput, CreateStarInput, Star } from "../types";
-import {
-  computeEnergy,
-  computeMomentum,
-  generateCompanionReply,
-} from "../services/companion";
-import { generateId, getRandomColor } from "../utils";
+import { starApi } from "../services/starApi";
 
 interface StarMapState {
   stars: Star[];
   selectedStarId: string | null;
-  lastReplyByStarId: Record<string, Star["checkIns"][number]["companionReply"]>;
-  createStar: (input: CreateStarInput) => void;
+  isLoading: boolean;
+  error: string | null;
+  fetchStars: () => Promise<void>;
+  createStar: (input: CreateStarInput) => Promise<boolean>;
   selectStar: (starId: string) => void;
-  submitCheckIn: (input: CreateCheckInInput) => void;
-  archiveStar: (starId: string) => void;
+  submitCheckIn: (input: CreateCheckInInput) => Promise<boolean>;
+  reset: () => void;
 }
 
 const initialState = {
   stars: [],
   selectedStarId: null,
-  lastReplyByStarId: {},
+  isLoading: false,
+  error: null,
 };
 
-const memoryStorage = new Map<string, string>();
+export const useStarMapStore = create<StarMapState>()((set, get) => ({
+  ...initialState,
 
-const storageAdapter: StateStorage = {
-  getItem: (name) => {
-    if (
-      typeof window !== "undefined" &&
-      typeof window.localStorage?.getItem === "function"
-    ) {
-      return window.localStorage.getItem(name);
-    }
-    return memoryStorage.get(name) ?? null;
-  },
-  setItem: (name, value) => {
-    if (
-      typeof window !== "undefined" &&
-      typeof window.localStorage?.setItem === "function"
-    ) {
-      window.localStorage.setItem(name, value);
+  fetchStars: async () => {
+    set({ isLoading: true, error: null });
+    const response = await starApi.list();
+
+    if (!response.success || !response.data) {
+      set({
+        isLoading: false,
+        error: response.error || "加载星图失败",
+      });
       return;
     }
-    memoryStorage.set(name, value);
+
+    const selectedStarId = get().selectedStarId;
+    const fallbackSelectedStarId =
+      response.data.find((star) => star.id === selectedStarId)?.id ??
+      response.data[0]?.id ??
+      null;
+
+    set({
+      stars: response.data,
+      selectedStarId: fallbackSelectedStarId,
+      isLoading: false,
+      error: null,
+    });
   },
-  removeItem: (name) => {
-    if (
-      typeof window !== "undefined" &&
-      typeof window.localStorage?.removeItem === "function"
-    ) {
-      window.localStorage.removeItem(name);
-      return;
+
+  createStar: async (input) => {
+    set({ isLoading: true, error: null });
+    const response = await starApi.create(input);
+
+    if (!response.success || !response.data) {
+      set({
+        isLoading: false,
+        error: response.error || "创建星星失败",
+      });
+      return false;
     }
-    memoryStorage.delete(name);
+
+    set((state) => ({
+      stars: [response.data!, ...state.stars],
+      selectedStarId: response.data!.id,
+      isLoading: false,
+      error: null,
+    }));
+    return true;
   },
-};
 
-export const useStarMapStore = create<StarMapState>()(
-  persist(
-    (set) => ({
-      ...initialState,
+  selectStar: (starId) => set({ selectedStarId: starId }),
 
-      createStar: (input) =>
-        set((state) => {
-          const now = Date.now();
-          const star: Star = {
-            id: generateId(),
-            title: input.title.trim(),
-            vision: input.vision.trim(),
-            whyItMatters: input.whyItMatters.trim(),
-            currentState: input.currentState.trim(),
-            color: getRandomColor(),
-            createdAt: now,
-            updatedAt: now,
-            momentum: "forming",
-            energy: 52,
-            status: "active",
-            nextStep: "先做一件最小但真实的开始动作。",
-            checkIns: [],
-          };
+  submitCheckIn: async (input) => {
+    set({ isLoading: true, error: null });
+    const response = await starApi.createCheckIn(input);
 
-          return {
-            stars: [star, ...state.stars],
-            selectedStarId: star.id,
-          };
-        }),
+    if (!response.success || !response.data) {
+      set({
+        isLoading: false,
+        error: response.error || "记录 check-in 失败",
+      });
+      return false;
+    }
 
-      selectStar: (starId) => set({ selectedStarId: starId }),
+    set((state) => ({
+      stars: state.stars.map((star) =>
+        star.id === response.data!.id ? response.data! : star,
+      ),
+      selectedStarId: response.data!.id,
+      isLoading: false,
+      error: null,
+    }));
+    return true;
+  },
 
-      submitCheckIn: (input) =>
-        set((state) => {
-          const star = state.stars.find((item) => item.id === input.starId);
-          if (!star) {
-            return state;
-          }
-
-          const reply = generateCompanionReply(star, {
-            mood: input.mood,
-            signal: input.signal,
-            update: input.update,
-            blocker: input.blocker,
-          });
-          const now = Date.now();
-          const entry = {
-            id: generateId(),
-            starId: star.id,
-            createdAt: now,
-            mood: input.mood,
-            signal: input.signal,
-            update: input.update.trim(),
-            blocker: input.blocker.trim(),
-            nextStep: reply.nextStep,
-            companionReply: reply,
-          };
-
-          return {
-            stars: state.stars.map((item) =>
-              item.id === star.id
-                ? {
-                    ...item,
-                    updatedAt: now,
-                    lastCheckInAt: now,
-                    currentState: input.update.trim(),
-                    nextStep: reply.nextStep,
-                    momentum: computeMomentum(input.signal),
-                    energy: computeEnergy(input.signal, input.mood),
-                    checkIns: [entry, ...item.checkIns],
-                  }
-                : item,
-            ),
-            lastReplyByStarId: {
-              ...state.lastReplyByStarId,
-              [star.id]: reply,
-            },
-          };
-        }),
-
-      archiveStar: (starId) =>
-        set((state) => ({
-          stars: state.stars.map((star) =>
-            star.id === starId ? { ...star, status: "archived" } : star,
-          ),
-        })),
-    }),
-    {
-      name: "starthere-star-map",
-      storage: createJSONStorage(() => storageAdapter),
-    },
-  ),
-);
+  reset: () => set({ ...initialState }),
+}));

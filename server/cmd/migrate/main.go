@@ -129,7 +129,7 @@ func guardManagedState(db *sql.DB) error {
 }
 
 func existingAppTables(db *sql.DB) (bool, error) {
-	for _, table := range []string{"users", "goals", "milestones"} {
+	for _, table := range []string{"users", "goals", "milestones", "stars", "star_check_ins"} {
 		exists, err := tableExists(db, table)
 		if err != nil {
 			return false, err

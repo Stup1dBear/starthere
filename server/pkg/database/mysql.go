@@ -57,5 +57,7 @@ func AutoMigrate() error {
 		&model.User{},
 		&model.Goal{},
 		&model.Milestone{},
+		&model.Star{},
+		&model.StarCheckIn{},
 	)
 }

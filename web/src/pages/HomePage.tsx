@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import { Box, Button, Container, Stack, Typography } from "@mui/material";
+import { useEffect, useMemo, useState } from "react";
+import { Alert, Box, Button, CircularProgress, Container, Stack, Typography } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useAuthStore } from "../stores/authStore";
 import { useStarMapStore } from "../stores/starMapStore";
@@ -13,7 +13,8 @@ import { JourneyTimeline } from "../components/JourneyTimeline";
 
 export function HomePage() {
   const { user, logout } = useAuthStore();
-  const { stars, selectedStarId, selectStar, lastReplyByStarId } = useStarMapStore();
+  const { stars, selectedStarId, selectStar, fetchStars, isLoading, error, reset } =
+    useStarMapStore();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const activeStars = useMemo(
@@ -22,6 +23,15 @@ export function HomePage() {
   );
   const selectedStar =
     activeStars.find((star) => star.id === selectedStarId) ?? activeStars[0];
+
+  useEffect(() => {
+    void fetchStars();
+  }, [fetchStars]);
+
+  const handleLogout = () => {
+    reset();
+    logout();
+  };
 
   return (
     <>
@@ -65,12 +75,18 @@ export function HomePage() {
               <Typography variant="body2" color="primary.light">
                 {user?.username}
               </Typography>
-              <Button size="small" startIcon={<LogoutIcon />} onClick={logout} color="inherit">
+              <Button size="small" startIcon={<LogoutIcon />} onClick={handleLogout} color="inherit">
                 退出登录
               </Button>
             </Box>
           </Stack>
         </Box>
+
+        {error ? (
+          <Alert severity="error" sx={{ mb: 3 }}>
+            {error}
+          </Alert>
+        ) : null}
 
         <Box
           sx={{
@@ -80,11 +96,24 @@ export function HomePage() {
           }}
         >
           <Box>
-            <StarMapPanel
-              stars={activeStars}
-              selectedStarId={selectedStar?.id ?? null}
-              onSelect={selectStar}
-            />
+            {isLoading && activeStars.length === 0 ? (
+              <Box
+                sx={{
+                  minHeight: 360,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <CircularProgress color="primary" />
+              </Box>
+            ) : (
+              <StarMapPanel
+                stars={activeStars}
+                selectedStarId={selectedStar?.id ?? null}
+                onSelect={selectStar}
+              />
+            )}
           </Box>
 
           <Box>
@@ -104,7 +133,6 @@ export function HomePage() {
                   <Box>
                     <CompanionPanel
                       star={selectedStar}
-                      reply={lastReplyByStarId[selectedStar.id]}
                     />
                   </Box>
                 </Box>
