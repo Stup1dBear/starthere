@@ -70,7 +70,9 @@ func loadEnvFile() {
 			value := strings.TrimSpace(parts[1])
 			// Remove quotes if present
 			value = strings.Trim(value, `"'`)
-			os.Setenv(key, value)
+			if _, exists := os.LookupEnv(key); !exists {
+				os.Setenv(key, value)
+			}
 		}
 	}
 }
