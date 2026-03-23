@@ -50,15 +50,25 @@ This file should stay understandable to both the developer and the agent in a fr
 
 ### P1
 
-- `todo` Define the assistant-first MVP loop
+- `done` Define the assistant-first MVP loop
   - Goal: turn the new product direction into a concrete, buildable interaction loop
   - Why: the product now has a stronger vision, but assistant responsibilities, check-in structure, and homepage shape are still unresolved
   - Done when: the assistant role, daily check-in flow, lightweight social entry point, and MVP information architecture are explicitly defined
 
-- `todo` Define assistant persona and first check-in flows
+- `done` Define assistant persona and first check-in flows
   - Goal: turn the accepted assistant direction into concrete prompts, states, and interaction patterns
   - Why: assistant usefulness now depends on consistent behavior for stuck, drifted, and low-pressure return scenarios
   - Done when: the assistant tone, honesty boundary, greeting style, and first check-in flows for key states are documented and ready to implement
+
+- `todo` Persist star and check-in data in the backend
+  - Goal: move the new MVP domain model off frontend-only local persistence
+  - Why: the assistant-first loop now exists in product form, but it is not yet durable across devices or environments
+  - Done when: star, check-in, and assistant-reply data have backend APIs and migrations
+
+- `todo` Replace deterministic companion replies with real LLM-backed responses
+  - Goal: upgrade the current assistant simulator into a production-ready model integration
+  - Why: the current rules are enough for MVP shape validation, but not the final assistant quality bar
+  - Done when: prompts, model integration, fallback behavior, and evaluation path are in place
 
 - `in_progress` Run a repository quality scan and targeted refactor pass
   - Goal: identify code and workflow areas that violate the current engineering standards, then fix the highest-value issues
@@ -100,9 +110,9 @@ This file should stay understandable to both the developer and the agent in a fr
 Recommended next sequence:
 
 1. Build staging environment.
-2. Complete CI gates.
-3. Add smoke test path.
-4. Perform repository quality scan and targeted refactor pass.
+2. Add smoke test path.
+3. Persist star and check-in data in the backend.
+4. Replace deterministic companion replies with real model integration.
 
 ## Execution Phases
 

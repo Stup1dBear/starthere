@@ -1,164 +1,155 @@
-import { useState } from "react";
-import {
-  Container,
-  Typography,
-  Box,
-  Fab,
-  Zoom,
-  Button,
-} from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
+import { useMemo, useState } from "react";
+import { Box, Button, Container, Stack, Typography } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { useGoalStore } from "../stores/goalStore";
 import { useAuthStore } from "../stores/authStore";
+import { useStarMapStore } from "../stores/starMapStore";
 import StarBackground from "../components/StarBackground";
-import GoalCard from "../components/GoalCard";
-import CreateGoalDialog from "../components/CreateGoalDialog";
+import { CreateStarDialog } from "../components/CreateStarDialog";
+import { StarMapPanel } from "../components/StarMapPanel";
+import { StarFocusPanel } from "../components/StarFocusPanel";
+import { CheckInComposer } from "../components/CheckInComposer";
+import { CompanionPanel } from "../components/CompanionPanel";
+import { JourneyTimeline } from "../components/JourneyTimeline";
 
 export function HomePage() {
-  const { goals } = useGoalStore();
   const { user, logout } = useAuthStore();
+  const { stars, selectedStarId, selectStar, lastReplyByStarId } = useStarMapStore();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const activeGoals = goals.filter((g) => g.status === "active");
-  const completedGoals = goals.filter((g) => g.status === "completed");
+  const activeStars = useMemo(
+    () => stars.filter((star) => star.status === "active"),
+    [stars],
+  );
+  const selectedStar =
+    activeStars.find((star) => star.id === selectedStarId) ?? activeStars[0];
 
   return (
     <>
       <StarBackground />
 
       <Container
-        maxWidth="md"
+        maxWidth="xl"
         sx={{ py: 4, position: "relative", zIndex: 1, minHeight: "100vh" }}
       >
-        {/* Header with logout */}
         <Box
           sx={{
             display: "flex",
-            justifyContent: "flex-end",
-            mb: 2,
+            justifyContent: "space-between",
+            gap: 2,
+            alignItems: { xs: "flex-start", md: "center" },
+            flexDirection: { xs: "column", md: "row" },
+            mb: 4,
           }}
         >
-          <Box sx={{ textAlign: "right" }}>
-            <Typography
-              variant="body2"
-              sx={{
-                fontFamily: "'Courier New', monospace",
-                color: "#90caf9",
-              }}
-            >
-              👨‍🚀 {user?.username}
-            </Typography>
-            <Button
-              size="small"
-              startIcon={<LogoutIcon />}
-              onClick={logout}
-              sx={{
-                fontFamily: "'Courier New', monospace",
-                color: "#888",
-                "&:hover": {
-                  color: "#ff6b6b",
-                },
-              }}
-            >
-              退出登录
-            </Button>
-          </Box>
-        </Box>
-
-        <Box textAlign="center" mb={6}>
-          <Typography
-            variant="h3"
-            component="h1"
-            gutterBottom
-            sx={{
-              fontWeight: "bold",
-              textShadow: "0 0 20px rgba(144, 202, 249, 0.5)",
-            }}
-          >
-            🌟 星辰目标
-          </Typography>
-          <Typography
-            variant="subtitle1"
-            sx={{ color: "text.secondary", letterSpacing: 1 }}
-          >
-            每一个目标都是宇宙中的一颗星星，点亮它。
-          </Typography>
-        </Box>
-
-        <Box mb={6}>
-          {activeGoals.length > 0 ? (
-            activeGoals.map((goal) => <GoalCard key={goal.id} goal={goal} />)
-          ) : (
-            <Box
-              textAlign="center"
-              py={8}
-              sx={{
-                border: "2px dashed rgba(255,255,255,0.1)",
-                borderRadius: 4,
-                bgcolor: "rgba(0,0,0,0.2)",
-              }}
-            >
-              <Typography variant="h6" color="text.secondary" gutterBottom>
-                这片星域还很空旷...
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                点击右下角的按钮，升起你的第一颗星星
-              </Typography>
-            </Box>
-          )}
-        </Box>
-
-        {completedGoals.length > 0 && (
           <Box>
-            <Typography
-              variant="h5"
-              gutterBottom
-              sx={{
-                color: "#FFD700",
-                textShadow: "0 0 10px rgba(255, 215, 0, 0.3)",
-              }}
-            >
-              ✨ 星系传说 (已完成)
+            <Typography variant="overline" color="primary.light">
+              StartHere MVP
             </Typography>
-            {completedGoals.map((goal) => (
-              <GoalCard key={goal.id} goal={goal} />
-            ))}
+            <Typography variant="h2" sx={{ maxWidth: 700 }}>
+              让一颗重要的星，不会因为漂移就被忘掉
+            </Typography>
+            <Typography
+              variant="body1"
+              color="text.secondary"
+              sx={{ maxWidth: 720, mt: 1.5 }}
+            >
+              首页现在不再是目标列表，而是围绕当前 star 的单用户闭环：看见它，更新它，被陪着往前推一点。
+            </Typography>
           </Box>
-        )}
 
-        <Zoom in={true} style={{ transitionDelay: "500ms" }}>
-          <Fab
-            color="primary"
-            aria-label="add"
-            sx={{
-              position: "fixed",
-              bottom: 32,
-              right: 32,
-              width: 72,
-              height: 72,
-              boxShadow: "0 0 20px rgba(144, 202, 249, 0.6)",
-              "&:hover": {
-                transform: "scale(1.1)",
-                boxShadow: "0 0 30px rgba(144, 202, 249, 0.8)",
-              },
-            }}
-            onClick={() => setIsDialogOpen(true)}
-          >
-            <AddIcon sx={{ fontSize: 32 }} />
-          </Fab>
-        </Zoom>
+          <Stack direction="row" spacing={1.5} alignItems="center">
+            <Button variant="contained" onClick={() => setIsDialogOpen(true)}>
+              点亮新星
+            </Button>
+            <Box sx={{ textAlign: "right" }}>
+              <Typography variant="body2" color="primary.light">
+                {user?.username}
+              </Typography>
+              <Button size="small" startIcon={<LogoutIcon />} onClick={logout} color="inherit">
+                退出登录
+              </Button>
+            </Box>
+          </Stack>
+        </Box>
 
-        <CreateGoalDialog
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: { xs: "1fr", lg: "minmax(320px, 0.95fr) 1.55fr" },
+            gap: 3,
+          }}
+        >
+          <Box>
+            <StarMapPanel
+              stars={activeStars}
+              selectedStarId={selectedStar?.id ?? null}
+              onSelect={selectStar}
+            />
+          </Box>
+
+          <Box>
+            {selectedStar ? (
+              <Stack spacing={3}>
+                <StarFocusPanel star={selectedStar} />
+                <Box
+                  sx={{
+                    display: "grid",
+                    gridTemplateColumns: { xs: "1fr", xl: "1.35fr 0.95fr" },
+                    gap: 3,
+                  }}
+                >
+                  <Box>
+                    <CheckInComposer star={selectedStar} />
+                  </Box>
+                  <Box>
+                    <CompanionPanel
+                      star={selectedStar}
+                      reply={lastReplyByStarId[selectedStar.id]}
+                    />
+                  </Box>
+                </Box>
+                <JourneyTimeline entries={selectedStar.checkIns} />
+              </Stack>
+            ) : (
+              <Box
+                sx={{
+                  minHeight: 520,
+                  borderRadius: 6,
+                  p: 4,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  background:
+                    "radial-gradient(circle at top, rgba(245,211,87,0.1), rgba(11,13,23,0.82) 55%)",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                }}
+              >
+                <Stack spacing={2} sx={{ maxWidth: 560 }}>
+                  <Typography variant="h4">先点亮第一颗星</Typography>
+                  <Typography variant="body1" color="text.secondary">
+                    MVP 的第一件事不是收集任务，而是让一个重要项目重新有重心。创建一颗星后，你就能开始连续的 check-in 和旅程记录。
+                  </Typography>
+                  <Box>
+                    <Button variant="contained" onClick={() => setIsDialogOpen(true)}>
+                      创建第一颗星
+                    </Button>
+                  </Box>
+                </Stack>
+              </Box>
+            )}
+          </Box>
+        </Box>
+
+        <Box mt={6}>
+          <Typography variant="caption" color="text.secondary">
+            外层社交信号本轮只保留氛围感，不做真实 feed。先把个人闭环做扎实。
+          </Typography>
+        </Box>
+
+        <CreateStarDialog
           open={isDialogOpen}
           onClose={() => setIsDialogOpen(false)}
         />
-
-        <Box mt={8} textAlign="center">
-          <Typography variant="caption" color="text.secondary">
-            🚀 StartHere - To the Stars
-          </Typography>
-        </Box>
       </Container>
     </>
   );

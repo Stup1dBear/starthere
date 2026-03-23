@@ -29,7 +29,8 @@ Use a practical pyramid:
 - end-to-end or smoke tests
   - critical user journeys only
   - login
-  - core goal CRUD
+  - create one star
+  - submit one check-in
 
 Do not over-invest in brittle UI-only tests that duplicate lower-level coverage.
 
@@ -84,8 +85,8 @@ Minimum staging smoke checks:
 - `GET /api/v1/health` returns success from the public staging API
 - login succeeds
 - `GET /auth/me` succeeds
-- create one goal succeeds
-- delete that goal succeeds
+- create one star succeeds
+- submit one check-in succeeds
 
 Minimum production smoke checks:
 
@@ -141,9 +142,10 @@ At minimum, protect these product flows:
 
 - register and login
 - token/session persistence behavior
-- create goal
-- edit goal
-- milestone updates
+- create star
+- update current star focus
+- submit check-in
+- receive assistant response
 - core authenticated page access
 
 As the product grows, keep this checklist updated.

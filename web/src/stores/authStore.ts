@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { createJSONStorage, persist, type StateStorage } from "zustand/middleware";
 import type { User } from "../types/auth";
 
 interface AuthStore {
@@ -12,6 +12,40 @@ interface AuthStore {
   logout: () => void;
   setUserVerified: () => void;
 }
+
+const memoryStorage = new Map<string, string>();
+
+const storageAdapter: StateStorage = {
+  getItem: (name) => {
+    if (
+      typeof window !== "undefined" &&
+      typeof window.localStorage?.getItem === "function"
+    ) {
+      return window.localStorage.getItem(name);
+    }
+    return memoryStorage.get(name) ?? null;
+  },
+  setItem: (name, value) => {
+    if (
+      typeof window !== "undefined" &&
+      typeof window.localStorage?.setItem === "function"
+    ) {
+      window.localStorage.setItem(name, value);
+      return;
+    }
+    memoryStorage.set(name, value);
+  },
+  removeItem: (name) => {
+    if (
+      typeof window !== "undefined" &&
+      typeof window.localStorage?.removeItem === "function"
+    ) {
+      window.localStorage.removeItem(name);
+      return;
+    }
+    memoryStorage.delete(name);
+  },
+};
 
 export const useAuthStore = create<AuthStore>()(
   persist(
@@ -41,6 +75,7 @@ export const useAuthStore = create<AuthStore>()(
     }),
     {
       name: "starthere-auth",
+      storage: createJSONStorage(() => storageAdapter),
     }
   )
 );

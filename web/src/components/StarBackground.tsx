@@ -8,11 +8,17 @@ const twinkle = keyframes`
   100% { opacity: 0.3; transform: scale(0.8); }
 `;
 
-const StarBackground: React.FC = () => {
-  // Generate static random stars to avoid hydration mismatch or re-renders
-  // In a real app, this should be better handled, but for now fixed random seed or CSS-only is better.
-  // Using pure CSS with multiple box-shadows is a common technique for starfields.
+const stars = Array.from({ length: 50 }, (_, index) => ({
+  id: index,
+  left: `${(index * 37) % 100}%`,
+  top: `${(index * 19 + 11) % 100}%`,
+  size: (index % 3) + 1,
+  opacity: 0.28 + ((index % 7) * 0.09),
+  duration: `${2 + (index % 4)}s`,
+  delay: `${(index % 5) * 0.7}s`,
+}));
 
+const StarBackground: React.FC = () => {
   return (
     <Box
       sx={{
@@ -26,20 +32,28 @@ const StarBackground: React.FC = () => {
         overflow: "hidden",
       }}
     >
-      {[...Array(50)].map((_, i) => (
+      <Box
+        sx={{
+          position: "absolute",
+          inset: 0,
+          background:
+            "radial-gradient(circle at top, rgba(244, 196, 48, 0.08), transparent 35%), radial-gradient(circle at 80% 20%, rgba(111, 156, 255, 0.12), transparent 22%)",
+        }}
+      />
+      {stars.map((star) => (
         <Box
-          key={i}
+          key={star.id}
           sx={{
             position: "absolute",
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-            width: Math.random() * 3 + 1,
-            height: Math.random() * 3 + 1,
+            left: star.left,
+            top: star.top,
+            width: star.size,
+            height: star.size,
             borderRadius: "50%",
             backgroundColor: "#FFF",
-            opacity: Math.random() * 0.7 + 0.3,
-            animation: `${twinkle} ${Math.random() * 3 + 2}s infinite ease-in-out`,
-            animationDelay: `${Math.random() * 5}s`,
+            opacity: star.opacity,
+            animation: `${twinkle} ${star.duration} infinite ease-in-out`,
+            animationDelay: star.delay,
           }}
         />
       ))}

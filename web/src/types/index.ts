@@ -1,20 +1,62 @@
-export interface Milestone {
-  id: string;
+export type StarMood =
+  | "clear"
+  | "hopeful"
+  | "foggy"
+  | "stuck"
+  | "tired"
+  | "energized";
+
+export type CheckInSignal = "progress" | "drift" | "blocked" | "returning";
+
+export type MomentumState = "forming" | "steady" | "drifting" | "renewing";
+
+export interface AssistantReply {
   title: string;
-  isCompleted: boolean;
+  message: string;
+  reflection: string;
+  nextStep: string;
 }
 
-export interface Goal {
+export interface CheckInEntry {
   id: string;
-  title: string;
-  description: string;
+  starId: string;
   createdAt: number;
-  completedAt?: number;
-  status: "active" | "completed";
-  milestones: Milestone[];
-  color: string; // HEX color for the star
+  mood: StarMood;
+  signal: CheckInSignal;
+  update: string;
+  blocker: string;
+  nextStep: string;
+  companionReply: AssistantReply;
 }
 
-export type GoalFormData = Pick<Goal, "title" | "description" | "color"> & {
-  milestones: string[]; // List of titles for initial milestones
-};
+export interface Star {
+  id: string;
+  title: string;
+  vision: string;
+  whyItMatters: string;
+  currentState: string;
+  color: string;
+  createdAt: number;
+  updatedAt: number;
+  lastCheckInAt?: number;
+  momentum: MomentumState;
+  energy: number;
+  status: "active" | "archived";
+  nextStep: string;
+  checkIns: CheckInEntry[];
+}
+
+export interface CreateStarInput {
+  title: string;
+  vision: string;
+  whyItMatters: string;
+  currentState: string;
+}
+
+export interface CreateCheckInInput {
+  starId: string;
+  mood: StarMood;
+  signal: CheckInSignal;
+  update: string;
+  blocker: string;
+}

@@ -1,10 +1,17 @@
-# 🌟 StartHere - 星辰目标管理
+# 🌟 StartHere - 星辰探索陪伴
 
-> "每一个目标都是你宇宙中的一颗星星，完成它，点亮它。"
+> 让一颗重要的星，不会因为漂移就被忘掉。
 
 ## 项目简介
 
-StartHere 是一个跨端（Web、iOS、Android）的目标管理应用，以宇宙探索为主题，让目标管理变得有趣。
+StartHere 是一个以宇宙探索为主题的长期项目陪伴产品。
+
+当前 MVP 重点不是任务管理，而是单用户闭环：
+
+- 点亮一颗重要的 star
+- 进行简短 check-in
+- 获得一条温和、可执行的 assistant 回复
+- 在旅程日志里看见推进、卡住、回归和下一步
 
 ## 技术栈
 
@@ -89,4 +96,4 @@ docker compose up -d
 
 ---
 
-🚀 Let's start here, and reach for the stars!
+🚀 Start here, then keep returning.
