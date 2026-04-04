@@ -165,6 +165,22 @@ Use one primary document per concern:
 
 - `AGENTS.md`
   - collaboration rules and agent behavior
+- `docs/WORKFLOWS.md`
+  - executable task flows from exploration through delivery and retrospective
+- `docs/AGENT_REVIEW.md`
+  - shared challenge and review rules for the developer and the agent
+- `docs/PARALLEL_DEVELOPMENT.md`
+  - rules for parallel tasks, branch isolation, and worktree usage
+- `docs/TASK_CLOSURE.md`
+  - rules for cleanup, archival, and finishing tasks cleanly
+- `docs/CODE_STYLE.md`
+  - repository code style rules and anti-patterns for frontend and backend contributions
+- `docs/DESIGN_EXPLORATION.md`
+  - workflow for visual exploration before the design language is stable
+- `docs/DESIGN_DECISION_LOG.md`
+  - durable record of visual experiments and design-direction findings
+- `docs/TESTING_PLAYBOOK.md`
+  - practical execution guide for selecting, running, and reporting tests in this repo
 - `docs/BACKLOG.md`
   - active engineering TODOs and priorities
 - `docs/DECISIONS.md`
@@ -199,6 +215,14 @@ The agent must check whether documentation needs an update when:
 Use these defaults:
 
 - collaboration behavior changed -> update `AGENTS.md`
+- task execution flow changed -> update `docs/WORKFLOWS.md`
+- review or challenge policy changed -> update `docs/AGENT_REVIEW.md`
+- parallel-work or worktree policy changed -> update `docs/PARALLEL_DEVELOPMENT.md`
+- task cleanup or closure policy changed -> update `docs/TASK_CLOSURE.md`
+- repository code style expectations changed -> update `docs/CODE_STYLE.md`
+- visual exploration workflow changed -> update `docs/DESIGN_EXPLORATION.md`
+- design exploration findings changed -> update `docs/DESIGN_DECISION_LOG.md`
+- practical testing execution workflow changed -> update `docs/TESTING_PLAYBOOK.md`
 - active work priorities changed -> update `docs/BACKLOG.md`
 - accepted rule or engineering decision changed -> update `docs/DECISIONS.md`
 - product direction, target user, core loop, or MVP shape changed -> update `docs/PRODUCT_STRATEGY.md`

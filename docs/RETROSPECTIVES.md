@@ -161,3 +161,37 @@ If it changes a rule, update the correct source-of-truth document as well.
   - [`AGENTS.md`](/Users/zhengyi/projects/starthere/AGENTS.md)
   - [`docs/PRODUCT_STRATEGY.md`](/Users/zhengyi/projects/starthere/docs/PRODUCT_STRATEGY.md)
   - [`docs/RETROSPECTIVES.md`](/Users/zhengyi/projects/starthere/docs/RETROSPECTIVES.md)
+
+## 2026-04-04: Harness Framework Foundation Review
+
+- Scope:
+  - Review the documentation round that established the project's initial harness framework for collaboration, review, parallel work, cleanup, code style, design exploration, and testing execution.
+- Inputs:
+  - This conversation's documentation work
+  - Updated source-of-truth docs under `docs/`
+  - Current repository scripts, test entrypoints, and workflow files
+- Working:
+  - The project now has a much clearer harness layer instead of relying on chat habits and implicit coordination.
+  - Exploration, review, parallel development, task closure, code style, design exploration, and testing execution now each have a durable home.
+  - The collaboration stayed honest about uncertainty instead of prematurely freezing weak standards, especially for design and existing AI-generated code quality.
+  - Misleading legacy guidance was reduced by deleting the outdated frontend design doc and tightening the project context entrypoint.
+- Problems:
+  - The harness framework is now broad enough that future rounds need real usage validation to make sure the documents are helping rather than becoming ceremony.
+  - Some existing automation still lags behind the current product shape, especially deep smoke coverage that still reflects older goal-based flows.
+  - Some existing tests still protect logic shapes more than real implementation behavior, especially on the frontend.
+  - The repository still contains older docs and references that may need future consolidation beyond the most obvious stale frontend design file.
+- Changes:
+  - Added workflow, review, parallel-development, task-closure, active-work, code-style, design-exploration, design-decision-log, and testing-playbook docs.
+  - Updated `AGENTS.md`, `docs/DECISIONS.md`, and `docs/PROJECT_CONTEXT.md` to recognize the new source-of-truth structure.
+  - Deleted the outdated `docs/FRONTEND_DESIGN.md`.
+  - Updated `make test-web` to use the non-interactive frontend test path.
+- Backlog:
+  - Validate the new harness docs against real implementation work in future conversations.
+  - Update smoke automation to cover the current authenticated star/check-in MVP path.
+  - Continue consolidating stale or drifted docs as they are discovered.
+- Related:
+  - [`AGENTS.md`](/Users/zhengkexiong/Programs/starthere/AGENTS.md)
+  - [`docs/WORKFLOWS.md`](/Users/zhengkexiong/Programs/starthere/docs/WORKFLOWS.md)
+  - [`docs/AGENT_REVIEW.md`](/Users/zhengkexiong/Programs/starthere/docs/AGENT_REVIEW.md)
+  - [`docs/PARALLEL_DEVELOPMENT.md`](/Users/zhengkexiong/Programs/starthere/docs/PARALLEL_DEVELOPMENT.md)
+  - [`docs/TASK_CLOSURE.md`](/Users/zhengkexiong/Programs/starthere/docs/TASK_CLOSURE.md)

@@ -273,7 +273,7 @@ server-logs:
 .PHONY: test-web
 test-web:
 	@echo "运行前端测试..."
-	cd web && npm test
+	cd web && npm run test:run
 
 .PHONY: test-web-ui
 test-web-ui:
