@@ -1,243 +1,186 @@
-# 📋 StartHere 项目上下文
+# Project Context
 
-> 此文件用于记录项目关键信息，防止会话丢失，方便复习。
+> Fast-start engineering context for new developer or agent sessions.
 
----
+## Purpose
 
-## 🎯 项目定位
+This document is the quickest durable entry point into the project.
 
-**StartHere - 星辰目标管理**
+Read this first when starting a new session and use it to answer:
 
-- **核心理念**：每一个目标都是宇宙中的一颗星星，完成它，点亮它
-- **项目名含义**：
-  - 用户：从这里开始管理目标，踏上改变的第一步
-  - 开发者：从这里开始学习跨端开发
+- what StartHere is building right now
+- what the current engineering shape is
+- which docs are the source of truth for product, workflow, testing, and operations
+- what commands and entry points matter most
 
-### 项目愿景
+This document is intentionally short on history and long on actionable context.
 
-- **🌐 公开部署** - 部署到真实环境，让所有人都能访问使用
-- **🔓 开源共享** - 开源代码，帮助有类似需求的开发者
-- **📖 学习示范** - 作为跨端 Web 开发的学习案例
+## What StartHere Is
 
-### 项目仓库
+StartHere is a star-themed exploration companion for meaningful long-term personal projects.
 
-- **GitHub**: https://github.com/Stup1dBear/starthere
-- **开源协议**: MIT（待添加）
+The current MVP is not a generic task manager.
 
----
+It focuses on a simple loop:
 
-## 👤 开发者背景
+- the user returns to an important star
+- the user writes a short check-in
+- the assistant responds in a calm, useful way
+- the product helps the user reconnect and continue
 
-### 专业领域
+For the full product direction, read [`docs/PRODUCT_STRATEGY.md`](/Users/zhengkexiong/Programs/starthere/docs/PRODUCT_STRATEGY.md).
 
-**具身智能（Embodied Intelligence）工程师**
+## Current Project Priorities
 
-- 机器人开发、嵌入式系统
-- 对 AI 开发、智能体有浓厚兴趣
+Current engineering and workflow priorities are tracked in [`docs/BACKLOG.md`](/Users/zhengkexiong/Programs/starthere/docs/BACKLOG.md).
 
-### 过往经验
+As of now, the most important priorities are:
 
-**后端工程师 - 数据中心基础设施平台**
+- build a safer release path through staging
+- strengthen smoke and regression coverage for the assistant-first MVP loop
+- continue improving repository quality and workflow maturity
 
-- IDC 运维平台开发
-- 性能监控 Agent 程序开发
-- 网络监控采集程序开发
-- 了解 K8s 概念（被云服务封装掩盖了底层细节，希望深入学习）
+Do not rely on this file for the live TODO list. Use the backlog.
 
-### 已掌握技能
+## Engineering Shape
 
-| 技能                  | 熟练度    | 备注            |
-| --------------------- | --------- | --------------- |
-| C/C++                 | ✅ 熟练   | 嵌入式/机器人   |
-| Python                | ✅ 熟练   | AI/脚本         |
-| Go                    | ✅ 熟练   | 后端/Agent 开发 |
-| Java                  | ✅ 熟练   | -               |
-| 监控系统              | ✅ 熟练   | 性能/网络监控   |
-| K8s                   | ⚡ 了解   | 需深入底层原理  |
-| HTML/CSS              | ⚡ 基础   | 有基础，需加强  |
-| JavaScript/TypeScript | 🆕 学习中 | 前端核心语言    |
-| React                 | 🆕 学习中 | 前端框架        |
+The repository is currently a single-project codebase with:
 
-### 学习目标（多线并行 🚀）
+- `web/`
+  - React + TypeScript + Vite frontend
+- `server/`
+  - Go backend
+- `docs/`
+  - source-of-truth project documentation
+- `deploy/`
+  - deployment-related assets
+- `scripts/`
+  - operational helper scripts
 
-1. **云服务开发工程师** ← 本项目主要目标
-   - 前端：React + TypeScript
-   - 后端：Go + Gin
-   - 部署：Docker、K8s 底层原理
-   - CI/CD、监控、日志
+## Product And System Reality
 
-2. **大数据开发工程师**（其他项目）
+Important current-state reminders:
 
-3. **AI 算法工程师**（其他项目）
+- this is a real product repo, not a tutorial sandbox
+- collaboration defaults to engineering delivery mode
+- the product direction has moved from generic goal tracking toward assistant-guided exploration companionship
+- release safety is improving, but still incomplete
+- staging exists as a major workflow priority and should remain part of the operating model
 
-4. **嵌入式机器人/ROS 工程师**（其他项目）
+## Must-Read Documents
 
-> 目标多不是问题，关键是一次专注一个，逐步积累 💪
+These are the highest-value documents for new sessions:
 
----
+- [`AGENTS.md`](/Users/zhengkexiong/Programs/starthere/AGENTS.md)
+  - collaboration rules, decision boundaries, documentation protocol
+- [`docs/WORKFLOWS.md`](/Users/zhengkexiong/Programs/starthere/docs/WORKFLOWS.md)
+  - how work moves from exploration to implementation and retrospective
+- [`docs/AGENT_REVIEW.md`](/Users/zhengkexiong/Programs/starthere/docs/AGENT_REVIEW.md)
+  - shared review and challenge rules for the developer and the agent
+- [`docs/CODE_STYLE.md`](/Users/zhengkexiong/Programs/starthere/docs/CODE_STYLE.md)
+  - repository code style rules and anti-patterns for frontend and backend work
+- [`docs/DESIGN_EXPLORATION.md`](/Users/zhengkexiong/Programs/starthere/docs/DESIGN_EXPLORATION.md)
+  - how visual direction should be explored before it is treated as stable
+- [`docs/DESIGN_DECISION_LOG.md`](/Users/zhengkexiong/Programs/starthere/docs/DESIGN_DECISION_LOG.md)
+  - durable record of visual exploration rounds
+- [`docs/PRODUCT_STRATEGY.md`](/Users/zhengkexiong/Programs/starthere/docs/PRODUCT_STRATEGY.md)
+  - product vision and MVP direction
+- [`docs/BACKLOG.md`](/Users/zhengkexiong/Programs/starthere/docs/BACKLOG.md)
+  - current priorities and active follow-up work
+- [`docs/TESTING.md`](/Users/zhengkexiong/Programs/starthere/docs/TESTING.md)
+  - testing expectations and minimum release checks
+- [`docs/ENGINEERING_OPERATIONS.md`](/Users/zhengkexiong/Programs/starthere/docs/ENGINEERING_OPERATIONS.md)
+  - branch, release, migration, and deployment rules
+- [`docs/ENVIRONMENTS.md`](/Users/zhengkexiong/Programs/starthere/docs/ENVIRONMENTS.md)
+  - local, staging, and production responsibilities
+- [`docs/DECISIONS.md`](/Users/zhengkexiong/Programs/starthere/docs/DECISIONS.md)
+  - accepted engineering and workflow decisions
 
-## 🛠 技术栈选型
+## Default Session Start
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                      StartHere                          │
-├─────────────────────────────────────────────────────────┤
-│  前端 Web    │ React + TypeScript + Vite               │
-│  移动端      │ React Native（后续）                     │
-│  后端        │ Go + Gin                                 │
-│  数据库      │ MySQL/PostgreSQL                         │
-│  部署        │ Docker + Nginx                           │
-└─────────────────────────────────────────────────────────┘
-```
+For a normal new session, read in roughly this order:
 
-### 为什么选择这套技术栈？
+1. [`AGENTS.md`](/Users/zhengkexiong/Programs/starthere/AGENTS.md)
+2. [`docs/PROJECT_CONTEXT.md`](/Users/zhengkexiong/Programs/starthere/docs/PROJECT_CONTEXT.md)
+3. [`docs/WORKFLOWS.md`](/Users/zhengkexiong/Programs/starthere/docs/WORKFLOWS.md)
+4. [`docs/AGENT_REVIEW.md`](/Users/zhengkexiong/Programs/starthere/docs/AGENT_REVIEW.md)
+5. whichever domain-specific document fits the task, such as code style, design exploration, testing, or operations
 
-**React + TypeScript**
+Then inspect the actual code and tests before proposing changes.
 
-- TypeScript 有静态类型，对 C++/Java 背景友好
-- React 生态成熟，学习资源丰富
-- 可复用到 React Native 实现移动端
+## Developer Context That Matters
 
-**Vite**
+The developer is strong in backend and infrastructure work.
 
-- 比 Webpack 更快的开发体验
-- 配置简单，适合学习
+Practical implications for collaboration:
 
-**Go + Gin**
+- frontend explanations should be concrete and technically accurate
+- do not give condescending tutorial-style guidance unless teaching is explicitly requested
+- challenge weak ideas directly and respectfully
+- optimize for maintainable delivery over impressive-looking abstractions
 
-- 你已熟悉 Go，减少学习负担
-- Gin 是最流行的 Go Web 框架，性能优秀
+## Local Development Entry Points
 
----
+Useful default commands from the repository root:
 
-## 📁 项目结构
-
-```
-starthere/
-├── web/                 # React 前端项目
-│   ├── src/
-│   │   ├── components/  # 可复用组件 (GoalCard, CreateGoalDialog)
-│   │   ├── pages/       # 页面组件
-│   │   ├── hooks/       # 自定义 Hooks
-│   │   ├── services/    # API 调用
-│   │   ├── stores/      # 状态管理 (Zustand)
-│   │   ├── types/       # 类型定义 (Goal, Milestone)
-│   │   ├── theme/       # 主题配置 (MUI)
-│   │   ├── utils/       # 工具函数
-│   │   └── styles/      # 样式文件
-│   └── package.json
-├── server/              # Go 后端项目
-│   ├── cmd/             # 入口文件
-│   ├── internal/        # 内部包
-│   │   ├── handler/     # HTTP 处理器
-│   │   ├── service/     # 业务逻辑
-│   │   ├── repository/  # 数据库操作
-│   │   └── model/       # 数据模型
-│   ├── pkg/             # 公共工具包
-│   └── go.mod
-├── docs/                # 文档与学习笔记
-├── deploy/              # 部署配置
-└── scripts/             # 脚本工具
+```bash
+make doctor
 ```
 
----
+Use this first to check the local environment.
 
-## 📚 学习笔记索引
+Frontend:
 
-随着开发进行，会在此目录下积累学习笔记：
-
-| 文件                        | 主题                 | 状态      |
-| --------------------------- | -------------------- | --------- |
-| `PROJECT_CONTEXT.md`        | 项目上下文（本文件） | ✅        |
-| `INFRASTRUCTURE.md`         | 基础设施管理         | ✅        |
-| `CICD_SETUP.md`             | CI/CD 配置指南       | ✅        |
-| `FRONTEND_DESIGN.md`        | 前端设计文档         | ✅        |
-| `LEARNING_REACT.md`         | React 学习笔记       | 📝 待创建 |
-| `LEARNING_TYPESCRIPT.md`    | TypeScript 学习笔记  | 📝 待创建 |
-| `BACKEND_BEST_PRACTICES.md` | 后端最佳实践         | 📝 待创建 |
-| `API_DESIGN.md`             | API 设计文档         | 📝 待创建 |
-
----
-
-## 🚀 开发进度
-
-### 当前阶段：前端功能开发 ✅
-
-- [x] 确定项目定位和技术栈
-- [x] 创建项目基础结构
-- [x] 创建 README.md
-- [x] 初始化前端项目（React + Vite）✅ 2026-01-24
-- [x] 配置 Docker 容器化部署 ✅ 2026-01-25
-- [x] 部署到火山引擎服务器 ✅ 2026-01-25
-- [x] 通过服务器 IP 访问成功 ✅ 2026-01-25
-- [x] 配置域名访问（域名备案完成 + DNS 已指向 ALB）✅ 2026-01-27
-- [x] 配置 HTTPS（ALB + SNI 多证书，star-there.com/cn 均可访问）✅ 2026-01-28
-- [x] 选择负载均衡方案：改用 ALB ✅ 2026-01-27
-- [x] 配置 CI/CD 自动部署（GitHub Actions → ghcr.io → 服务器）✅ 2026-01-29
-- [x] **前端核心功能实现** (MUI + Zustand) ✅ 2026-01-30
-  - [x] 目标创建/编辑/删除
-  - [x] 里程碑管理
-  - [x] 星空主题 UI
-  - [x] 本地持久化存储
-- [ ] 初始化后端项目（Go + Gin）
-- [ ] 搭建基础页面框架
-
----
-
-## 💡 开发原则
-
-1. **边做边学** - 不求一次学完，遇到什么学什么
-2. **小步快跑** - 每次实现小功能，及时验证
-3. **记录沉淀** - 重要知识点记录到 docs/
-4. **代码整洁** - 宁可慢一点，也要保持代码质量
-
----
-
-## 🎓 协作偏好（AI 请注意）
-
-> 这些是开发者明确表达的学习偏好，请在后续协作中遵循：
-
-1. **创建多文件时要解释** - 一次生成多个文件后，需要逐个说明每个文件的作用
-2. **先检查环境** - 执行命令前先检查依赖是否已安装
-3. **解释命令含义** - 对不熟悉的命令要解释原理
-4. **从基础讲起** - 开发者前端基础较弱，需要耐心解释概念
-
----
-
-## 🤖 AI 编程助手使用指南
-
-### 新会话如何快速恢复上下文？
-
-每次开启新的 AI 会话时，使用以下提示词：
-
-```
-请先阅读 docs/PROJECT_CONTEXT.md 了解项目背景，然后告诉我你理解了什么，我们继续开发。
+```bash
+cd web
+npm ci
+npm run dev
 ```
 
-### 上下文保存最佳实践
+Backend:
 
-1. **关键决策记录到此文件** - 技术选型、架构变更等
-2. **开发进度及时更新** - 方便 AI 知道当前状态
-3. **学习笔记分文件存放** - 按主题拆分到 docs/ 下
-4. **提交信息要清晰** - Git 历史也是上下文的一部分
+```bash
+cd server
+go mod tidy
+go run ./cmd/api/main.go
+```
 
-### 与 AI 协作的技巧
+Local MySQL only:
 
-- 让 AI 先读取上下文文件再开始工作
-- 重要变更让 AI 同步更新此文档
-- 复杂功能拆分成小步骤，逐步实现
-- 不懂的地方随时问，要求解释原理
-- **复杂任务前，让 AI 先列计划确认后再执行**
-- **定期让 AI 总结学到的知识点**
-- **发现 AI 错误及时纠正**（AI 可能会看错、记错）
+```bash
+docker compose up -d mysql
+```
 
-### AI 编程的注意事项
+Full local container environment:
 
-- AI 生成的代码需要审查，不要盲目信任
-- AI 可能会"幻觉"（编造不存在的 API 或库）
-- 终端输出可能混乱，AI 可能看错（如本次 Docker 检测）
-- 让 AI 解释原理，不仅仅是给代码
+```bash
+docker compose up -d
+```
 
----
+For more setup details, use [`docs/DEVELOPMENT.md`](/Users/zhengkexiong/Programs/starthere/docs/DEVELOPMENT.md).
 
-_最后更新：2026-01-30_
+## Collaboration Rules Worth Remembering
+
+These are the highest-signal collaboration rules for new sessions:
+
+- inspect the relevant code before proposing implementation
+- for non-trivial work, align on scope, non-goals, acceptance criteria, and verification
+- use exploration first when the task is still fuzzy
+- switch to delivery mode once the direction is stable
+- testing is part of delivery, not optional polish
+- durable docs should be updated when behavior, workflow, or decisions change
+
+## When This Document Should Change
+
+Update this file when:
+
+- the project's current engineering shape changes materially
+- the default session entry documents change
+- the fast-start understanding of the product or repository becomes outdated
+
+Do not turn this file into:
+
+- a backlog
+- a decision log
+- a learning diary
+- a duplicate of product strategy or testing rules
