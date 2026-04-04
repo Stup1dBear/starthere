@@ -179,6 +179,8 @@ Use one primary document per concern:
   - workflow for visual exploration before the design language is stable
 - `docs/DESIGN_DECISION_LOG.md`
   - durable record of visual experiments and design-direction findings
+- `docs/FRONTEND_VALIDATION.md`
+  - evidence and review rules for frontend verification, screenshots, and human visual judgment boundaries
 - `docs/TESTING_PLAYBOOK.md`
   - practical execution guide for selecting, running, and reporting tests in this repo
 - `docs/BACKLOG.md`
@@ -222,6 +224,7 @@ Use these defaults:
 - repository code style expectations changed -> update `docs/CODE_STYLE.md`
 - visual exploration workflow changed -> update `docs/DESIGN_EXPLORATION.md`
 - design exploration findings changed -> update `docs/DESIGN_DECISION_LOG.md`
+- frontend verification or visual-review boundary changed -> update `docs/FRONTEND_VALIDATION.md`
 - practical testing execution workflow changed -> update `docs/TESTING_PLAYBOOK.md`
 - active work priorities changed -> update `docs/BACKLOG.md`
 - accepted rule or engineering decision changed -> update `docs/DECISIONS.md`
