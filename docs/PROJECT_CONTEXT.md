@@ -83,6 +83,8 @@ These are the highest-value documents for new sessions:
   - how visual direction should be explored before it is treated as stable
 - [`docs/DESIGN_DECISION_LOG.md`](/Users/zhengkexiong/Programs/starthere/docs/DESIGN_DECISION_LOG.md)
   - durable record of visual exploration rounds
+- [`docs/FRONTEND_VALIDATION.md`](/Users/zhengkexiong/Programs/starthere/docs/FRONTEND_VALIDATION.md)
+  - what frontend work can be validated automatically, what needs rendered evidence, and what still needs human judgment
 - [`docs/PRODUCT_STRATEGY.md`](/Users/zhengkexiong/Programs/starthere/docs/PRODUCT_STRATEGY.md)
   - product vision and MVP direction
 - [`docs/BACKLOG.md`](/Users/zhengkexiong/Programs/starthere/docs/BACKLOG.md)

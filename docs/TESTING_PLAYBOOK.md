@@ -17,6 +17,8 @@ This document complements [`docs/TESTING.md`](/Users/zhengkexiong/Programs/start
   - principles, expectations, and release standards
 - `docs/TESTING_PLAYBOOK.md`
   - how to execute those expectations in this repository
+- [`docs/FRONTEND_VALIDATION.md`](/Users/zhengkexiong/Programs/starthere/docs/FRONTEND_VALIDATION.md)
+  - how frontend confidence should be split between functional checks, rendered evidence, and human visual judgment
 
 ## Core Principle
 
@@ -151,6 +153,13 @@ Typical manual checks:
 - key interaction path still works
 - empty, loading, and error states still make sense
 - desktop and mobile layouts do not obviously collapse
+
+For meaningful UI work, also follow [`docs/FRONTEND_VALIDATION.md`](/Users/zhengkexiong/Programs/starthere/docs/FRONTEND_VALIDATION.md) so the close-out distinguishes:
+
+- functional confidence
+- structural confidence
+- rendered evidence
+- remaining visual judgment risk
 
 ## Backend Playbook
 
@@ -322,6 +331,8 @@ Usually run:
 - affected frontend checks as appropriate
 - focused manual verification
 
+Do not report a visual-only change as fully validated without rendered evidence and explicit treatment of residual visual risk.
+
 Do not hide behind "visual-only" if logic changed too.
 
 ## Current Project Guidance
@@ -332,3 +343,4 @@ For StartHere right now:
 - treat handler and service coverage as a current improvement area
 - be honest that deep smoke coverage still needs to catch up with the current star/check-in MVP
 - record manual verification explicitly whenever visual or deployment behavior is involved
+- use [`docs/FRONTEND_VALIDATION.md`](/Users/zhengkexiong/Programs/starthere/docs/FRONTEND_VALIDATION.md) whenever frontend work needs screenshot-backed or human-reviewed confidence

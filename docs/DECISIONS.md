@@ -256,3 +256,25 @@ If something is still undecided, keep it in [`docs/BACKLOG.md`](/Users/zhengyi/p
 - Related:
   - [`docs/TESTING.md`](/Users/zhengkexiong/Programs/starthere/docs/TESTING.md)
   - [`docs/TESTING_PLAYBOOK.md`](/Users/zhengkexiong/Programs/starthere/docs/TESTING_PLAYBOOK.md)
+
+## 2026-04-04: Frontend Validation Must Separate Functional Confidence From Visual Judgment
+
+- Status: accepted
+- Context:
+  - The project can validate backend behavior relatively directly through contracts, tests, and runtime checks, but frontend quality is harder to judge from code alone.
+  - The developer observed that an agent-generated MVP could contain the right content and interactions while still missing the intended visual and experiential quality badly.
+  - Existing docs already acknowledge design exploration and manual verification, but they did not yet define what the agent may honestly claim about frontend quality.
+- Decision:
+  - Frontend verification should be treated as layered: functional validation, structural validation, rendered evidence, and product or visual judgment.
+  - The agent may report the checks actually performed and the visible evidence actually reviewed, but should not claim full visual success from code or functional behavior alone.
+  - Core-screen visual changes should require rendered evidence and explicit human review before claiming strong product-fit confidence.
+  - These rules live in [`docs/FRONTEND_VALIDATION.md`](/Users/zhengkexiong/Programs/starthere/docs/FRONTEND_VALIDATION.md).
+- Why:
+  - This keeps frontend close-outs honest, prevents code-complete from being mistaken for visually successful, and gives the project a repeatable way to review UI work without pretending LLM judgment is enough.
+- Consequences:
+  - Future frontend delivery reports should distinguish functional confidence from visual-confidence gaps.
+  - Screenshot-backed review and explicit residual-risk reporting become normal for meaningful UI work.
+- Related:
+  - [`docs/TESTING_PLAYBOOK.md`](/Users/zhengkexiong/Programs/starthere/docs/TESTING_PLAYBOOK.md)
+  - [`docs/DESIGN_EXPLORATION.md`](/Users/zhengkexiong/Programs/starthere/docs/DESIGN_EXPLORATION.md)
+  - [`docs/FRONTEND_VALIDATION.md`](/Users/zhengkexiong/Programs/starthere/docs/FRONTEND_VALIDATION.md)
